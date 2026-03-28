@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="Faran Najam">
+<meta name="copyright" content="© 2026 Faran Najam. All rights reserved.">
+<meta name="description" content="Claude Code for PMs — a free course by Faran Najam. Free to learn from, not to republish or sell.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code for PMs — The craft is evolving</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+:root {
+  --blue:#236CFF; --blue-dark:#1450CC; --blue-light:#EBF1FF; --blue-mid:#C5D7FF; --blue-dim:rgba(35,108,255,0.08);
+  --bg:#F5F6FA; --white:#FFFFFF; --surface:#FFFFFF; --surface2:#F0F2F8;
+  --border:#DDE1EE; --border-dark:#C4CADC;
+  --text:#1A1F36; --text-mid:#4A5068; --muted:#8C93A8; --muted-light:#B8BDD0;
+  --green:#0B8A4C; --green-light:#E6F5EE;
+  --amber:#C47B00; --amber-light:#FFF3DC;
+  --red:#D93025; --red-light:#FDECEA;
+  --purple:#6B4EFF; --purple-light:#F0EEFF;
+  --teal:#0F6E56; --teal-light:#E1F5EE;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Nunito Sans','Avenir Next',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* SHELL */
+.shell{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{width:272px;min-width:272px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;z-index:10}
+.sidebar::before{content:'';display:block;height:3px;background:var(--blue);flex-shrink:0}
+.sidebar-logo{padding:18px 20px 14px;border-bottom:1px solid var(--border)}
+.logo-course-title{font-size:15px;font-weight:800;color:var(--text);line-height:1.25;letter-spacing:-0.01em}
+.logo-sub{margin-top:4px;font-size:10px;color:var(--muted);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;font-family:'IBM Plex Mono',monospace}
+.progress-bar-wrap{padding:12px 20px;border-bottom:1px solid var(--border);background:var(--surface2)}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px;font-family:'IBM Plex Mono',monospace;font-weight:600;letter-spacing:0.04em}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),#5B9AFF);border-radius:2px;transition:width 0.4s ease}
+.parts-nav{flex:1;overflow-y:auto;padding:4px 0 16px}
+.part-group{}
+.part-header{padding:9px 20px 8px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:background 0.12s;user-select:none}
+.part-header:hover{background:var(--blue-dim)}
+.part-num{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--blue);font-weight:600;letter-spacing:0.08em;min-width:18px;text-transform:uppercase}
+.part-name{font-size:12px;font-weight:700;color:var(--text-mid);flex:1;line-height:1.3}
+.part-chevron{color:var(--muted-light);font-size:9px;transition:transform 0.18s}
+.part-group.open .part-chevron{transform:rotate(90deg)}
+.lessons-list{display:none;border-bottom:1px solid var(--border)}
+.part-group.open .lessons-list{display:block}
+.lesson-item{padding:6px 20px 6px 46px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);line-height:1.3;transition:all 0.12s;border-left:2px solid transparent}
+.lesson-item:hover{background:var(--blue-dim);color:var(--text)}
+.lesson-item.active{background:var(--blue-light);color:var(--blue-dark);border-left-color:var(--blue);font-weight:700}
+.lesson-item.done{color:var(--green)}
+.lesson-item.done .lesson-dot{background:var(--green)}
+.lesson-dot{width:5px;height:5px;border-radius:50%;background:var(--border-dark);min-width:5px;flex-shrink:0}
+.lesson-item.active .lesson-dot{background:var(--blue)}
+.sidebar-nav-links{padding:12px 20px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:2px}
+.nav-link{font-size:12px;font-weight:600;color:var(--muted);padding:7px 10px;border-radius:6px;cursor:pointer;transition:all 0.12s;display:flex;align-items:center;gap:8px}
+.nav-link:hover{background:var(--blue-dim);color:var(--blue)}
+.nav-link.active{background:var(--blue-light);color:var(--blue-dark)}
+.nav-link-icon{font-size:14px}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+
+/* TOPBAR */
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:5}
+.breadcrumb{font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.breadcrumb-sep{color:var(--muted-light)}
+.breadcrumb-current{color:var(--blue);font-weight:600}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+.btn{font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;padding:8px 18px;border-radius:6px;border:none;cursor:pointer;transition:all 0.15s;letter-spacing:0.01em}
+.btn-ghost{background:transparent;color:var(--text-mid);border:1.5px solid var(--border-dark)}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-dim)}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(35,108,255,0.25)}
+.btn-primary:hover{background:var(--blue-dark);transform:translateY(-1px)}
+
+/* CONTENT */
+.content-wrap{flex:1;padding:40px 44px 80px;max-width:860px}
+.lesson-meta{display:flex;align-items:center;gap:10px;margin-bottom:22px;flex-wrap:wrap}
+.lesson-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--blue);background:var(--blue-light);padding:4px 10px;border-radius:4px;text-transform:uppercase;border:1px solid var(--blue-mid)}
+.lesson-num-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)}
+.lesson-badges{display:flex;gap:6px;align-items:center}
+.badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:0.04em}
+.badge-time{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+.badge-easy{background:var(--green-light);color:var(--green)}
+.badge-medium{background:var(--amber-light);color:var(--amber)}
+.badge-advanced{background:var(--purple-light);color:var(--purple)}
+h1{font-size:30px;font-weight:800;color:var(--text);line-height:1.18;margin-bottom:10px;letter-spacing:-0.025em;position:relative;padding-left:16px}
+h1::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--blue);border-radius:2px}
+.lesson-subtitle{font-size:15px;color:var(--text-mid);margin-bottom:32px;margin-left:16px;line-height:1.6;font-weight:400}
+.section{margin-bottom:30px}
+.section-label{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:10px}
+.concept-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:13px 15px;border-top:2px solid var(--blue-mid);transition:border-top-color 0.15s,box-shadow 0.15s}
+.concept-card:hover{border-top-color:var(--blue);box-shadow:0 2px 12px rgba(35,108,255,0.1)}
+.concept-name{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--blue-dark);margin-bottom:5px}
+.concept-desc{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
+.example-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:10px}
+.example-label{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px}
+.example-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.example-side{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:12px 14px}
+.example-side-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;font-family:'IBM Plex Mono',monospace}
+.example-side.before .example-side-label{color:var(--red)}
+.example-side.after .example-side-label{color:var(--green)}
+.example-content{font-size:12px;color:var(--text-mid);line-height:1.6;white-space:pre-wrap;font-family:'IBM Plex Mono',monospace}
+.exercise-box{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:18px 22px;border-left:4px solid var(--blue);box-shadow:0 1px 4px rgba(35,108,255,0.07)}
+.exercise-label{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--blue);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px}
+.exercise-text{color:var(--text);line-height:1.7;margin:0;font-size:14px}
+.artifact-box{background:var(--amber-light);border:1px solid #F5D78A;border-radius:8px;padding:14px 18px;display:flex;align-items:flex-start;gap:12px}
+.artifact-icon{font-size:18px;line-height:1;padding-top:2px}
+.artifact-label{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--amber);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:3px}
+.artifact-name{color:#7A5000;font-size:13px;font-weight:600;margin:0}
+.prompt-block{background:#F8FAFF;border:1px solid var(--blue-mid);border-radius:8px;padding:16px 20px;margin:10px 0;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text);line-height:1.75;position:relative;white-space:pre-wrap;word-break:break-word}
+.prompt-block::before{content:'STARTER PROMPT';display:block;font-size:9px;color:var(--blue);letter-spacing:0.14em;margin-bottom:10px;font-weight:600}
+.copy-btn{position:absolute;top:12px;right:12px;background:var(--blue-light);border:1px solid var(--blue-mid);color:var(--blue);font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;padding:4px 9px;border-radius:4px;cursor:pointer;letter-spacing:0.08em;transition:all 0.12s}
+.copy-btn:hover{background:var(--blue);color:#fff}
+.quiz-section{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px 22px}
+.quiz-q{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.5}
+.quiz-options{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.quiz-opt{padding:9px 14px;border:1.5px solid var(--border);border-radius:6px;cursor:pointer;font-size:13px;color:var(--text-mid);transition:all 0.12s;background:var(--surface2);font-weight:500}
+.quiz-opt:hover{border-color:var(--blue);color:var(--blue-dark);background:var(--blue-light)}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-light);color:var(--green);font-weight:700}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.quiz-feedback{font-size:13px;color:var(--muted);margin-top:8px;min-height:20px;line-height:1.5;font-weight:500}
+.quiz-feedback.ok{color:var(--green)}
+.quiz-feedback.err{color:var(--red)}
+.complete-bar{background:var(--white);border-top:1px solid var(--border);padding:16px 44px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;bottom:0;box-shadow:0 -2px 8px rgba(0,0,0,0.06)}
+.complete-hint{font-size:12px;color:var(--muted);font-weight:500}
+
+/* HOME / LANDING */
+.landing{max-width:860px}
+.landing-hero{padding:56px 44px 40px;border-bottom:1px solid var(--border);background:var(--white);margin-bottom:0}
+.landing-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.18em;color:var(--blue);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+.landing-h1{font-size:44px;font-weight:900;color:var(--text);line-height:1.1;letter-spacing:-0.03em;margin-bottom:16px}
+.landing-h1 em{font-style:normal;color:var(--blue)}
+.landing-desc{font-size:16px;color:var(--text-mid);max-width:540px;line-height:1.7;margin-bottom:28px;font-weight:400}
+.landing-cta-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:36px}
+.landing-note{font-size:12px;color:var(--muted);margin-top:4px}
+.differentiators{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:36px 44px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.diff-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.diff-icon{font-size:22px;margin-bottom:10px}
+.diff-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:5px}
+.diff-desc{font-size:12px;color:var(--muted);line-height:1.55}
+.stats-strip{display:flex;gap:0;background:var(--white);border-bottom:1px solid var(--border)}
+.stat{flex:1;padding:20px 0;text-align:center;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-num{font-size:26px;font-weight:900;color:var(--blue);line-height:1;margin-bottom:3px;letter-spacing:-0.02em}
+.stat-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+.section-heading{font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin:0 44px 14px;font-family:'IBM Plex Mono',monospace;padding-top:36px}
+.parts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 44px 80px}
+.part-card{background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:18px 20px;cursor:pointer;transition:all 0.18s;position:relative;overflow:hidden}
+.part-card:hover{border-color:var(--blue);box-shadow:0 4px 16px rgba(35,108,255,0.12);transform:translateY(-2px)}
+.part-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--blue);border-radius:2px 0 0 2px;opacity:0;transition:opacity 0.18s}
+.part-card:hover::before{opacity:1}
+.part-card-num{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--blue);font-weight:600;letter-spacing:0.1em;margin-bottom:6px;text-transform:uppercase}
+.part-card h3{font-size:15px;font-weight:800;color:var(--text);margin-bottom:4px;line-height:1.3}
+.part-card p{font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5}
+.part-card-meta{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted-light)}
+
+/* GETTING STARTED */
+.gs-wrap{padding:40px 44px 80px;max-width:860px}
+.gs-step{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:22px 24px;margin-bottom:14px;display:flex;gap:18px;align-items:flex-start}
+.gs-num{width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'IBM Plex Mono',monospace}
+.gs-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
+.gs-body{font-size:13px;color:var(--text-mid);line-height:1.65}
+.gs-body code{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--blue-dark)}
+.gs-body a{color:var(--blue);text-decoration:none;font-weight:600}
+.gs-body a:hover{text-decoration:underline}
+.warning-box{background:var(--amber-light);border:1px solid #F5D78A;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:14px}
+.warning-label{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--amber);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:5px}
+.warning-body{font-size:13px;color:#7A5000;line-height:1.6}
+.safe-list{list-style:none;margin-top:8px}
+.safe-list li{font-size:13px;color:#7A5000;padding:3px 0 3px 18px;position:relative}
+.safe-list li::before{content:'×';position:absolute;left:0;color:var(--red);font-weight:700}
+.safe-list li.ok::before{content:'✓';color:var(--green)}
+
+/* PROMPT LIBRARY */
+.pl-wrap{padding:40px 44px 80px;max-width:860px}
+.pl-search{width:100%;padding:10px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'Nunito Sans',sans-serif;color:var(--text);background:var(--white);margin-bottom:20px;outline:none;transition:border-color 0.15s}
+.pl-search:focus{border-color:var(--blue)}
+.pl-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.pl-filter{font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;transition:all 0.12s;color:var(--muted)}
+.pl-filter:hover,.pl-filter.active{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark)}
+.pl-group{margin-bottom:28px}
+.pl-group-title{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.pl-group-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.pl-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;transition:border-color 0.12s}
+.pl-card:hover{border-color:var(--blue-mid)}
+.pl-card-text{flex:1}
+.pl-card-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.pl-card-preview{font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:500px}
+.pl-copy{background:var(--blue-light);border:1px solid var(--blue-mid);color:var(--blue);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;padding:5px 10px;border-radius:4px;cursor:pointer;white-space:nowrap;transition:all 0.12s;flex-shrink:0}
+.pl-copy:hover{background:var(--blue);color:#fff}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-dark)}
+
+/* MOBILE */
+@media(max-width:820px){
+  .sidebar{width:0;min-width:0;position:fixed;transform:translateX(-100%);transition:transform 0.25s;z-index:100}
+  .sidebar.open{width:272px;min-width:272px;transform:translateX(0)}
+  .mobile-menu-btn{display:flex}
+  .content-wrap,.gs-wrap,.pl-wrap{padding:24px 20px 80px}
+  .landing-hero{padding:32px 20px 28px}
+  .landing-h1{font-size:32px}
+  .differentiators{grid-template-columns:1fr;padding:24px 20px}
+  .parts-grid{grid-template-columns:1fr;padding:0 20px 60px}
+  .section-heading{margin:0 20px 12px;padding-top:24px}
+  .topbar{padding:12px 16px}
+  .complete-bar{padding:14px 20px}
+  .example-cols{grid-template-columns:1fr}
+  .pl-wrap,.gs-wrap{padding:24px 20px 80px}
+  .stats-strip{flex-wrap:wrap}
+  .stat{min-width:50%}
+  .landing-cta-row{flex-direction:column;align-items:flex-start}
+}
+.mobile-menu-btn{display:none;background:none;border:none;cursor:pointer;padding:4px;color:var(--text-mid)}
+.mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99}
+.mobile-overlay.open{display:block}
+
+  /* COPYRIGHT FOOTER */
+  .copyright-footer{
+    background:var(--white);
+    border-top:1px solid var(--border);
+    padding:20px 44px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .copyright-text{
+    font-size:11px;
+    color:var(--muted);
+    font-family:'IBM Plex Mono',monospace;
+    line-height:1.6;
+  }
+  .copyright-text a{color:var(--blue);text-decoration:none}
+  .copyright-text a:hover{text-decoration:underline}
+  .terms-banner{
+    background:var(--surface2);
+    border-bottom:1px solid var(--border);
+    padding:10px 44px;
+    font-size:11px;
+    color:var(--muted);
+    font-family:'IBM Plex Mono',monospace;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .terms-banner strong{color:var(--text-mid)}
+  @media(max-width:820px){
+    .copyright-footer{padding:16px 20px}
+    .terms-banner{padding:10px 20px}
+  }
+</style>
+</head>
+<body>
+<div class="mobile-overlay" id="overlay" onclick="closeSidebar()"></div>
+<div class="shell">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-course-title">Claude Code for PMs</div>
+    <div class="logo-sub">The craft is evolving · 28 Lessons</div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-label"><span>PROGRESS</span><span id="progress-pct">0 / 28</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+  <nav class="parts-nav" id="parts-nav"></nav>
+  <div class="sidebar-nav-links">
+    <div class="nav-link" id="nl-home" onclick="showHome()"><span class="nav-link-icon">⌂</span> Course home</div>
+    <div class="nav-link" id="nl-start" onclick="showGettingStarted()"><span class="nav-link-icon">◎</span> Getting started</div>
+    <div class="nav-link" id="nl-prompts" onclick="showPromptLibrary()"><span class="nav-link-icon">⌘</span> Prompt library</div>
+  </div>
+</aside>
+<main class="main" id="main-view"></main>
+</div>
+<div class="copyright-footer" id="copyright-bar">
+  <div class="copyright-text">
+    © 2026 <strong>Faran Najam</strong> · Claude Code for PMs<br>
+    Free to learn from. Not licensed for redistribution, resale, or commercial use without permission.
+  </div>
+  <div class="copyright-text" style="text-align:right">
+    First published March 2026 · <a href="https://linkedin.com/in/farannajam" target="_blank">LinkedIn</a>
+  </div>
+</div>
+
+<script>
+// Claude Code for PMs — © 2026 Faran Najam. Free to learn from, not to republish or sell.
+// First published: March 2026. Contact: contact via LinkedIn
+const lessonExamples = {"p1l1": {"before": "Meeting notes from yesterday: john said something about latency, need to talk to design re the empty state, users confused follow up, Q3 goal still tbd, sarah has concerns", "after": "Problem Statement\\nUsers experiencing latency issues and confusion around empty states, impacting adoption.\\n\\nGoals\\n- Resolve latency concerns raised in eng sync\\n- Align with design on empty state treatment\\n\\nOpen Questions\\n- What is the Q3 adoption goal?\\n- What are Sarah concerns specifically?"}, "p1l2": {"before": "Every session you spend the first few minutes re-explaining the same context. What the product is, who the users are, where you are in the roadmap, what the key tensions are. Claude starts fresh every time.", "after": "# my-product/CLAUDE.md\\nProduct: [your product name]\\nRole: Staff PM\\nUsers: [your primary segments]\\nCurrent phase: Q3 planning\\nKey tension: Reliability vs. feature velocity\\nOpen decisions: Versioning strategy, tiering model\\n\\n[Claude reads this at session start. You never re-explain context again.]"}, "p1l3": {"before": "Starting a new Claude Code session on a decision you worked through last week. You remember the conclusion but not the reasoning. You search Slack for 20 minutes. You find the thread but the context is scattered across 40 messages.", "after": "change_log.md\\nDate: 2025-03-15\\nDecision: Prioritize reliability investment before next feature cycle\\nReason: Two enterprise customers flagged stability as a risk to renewal\\nOwner: PM\\nReversible: Yes — revisit in Q4 if risk resolves\\n\\n[Decision trail intact. New session, full context in seconds.]"}, "p1l4": {"before": "Every Friday: open Claude, explain the format you want, paste notes, fix the output, repeat next week with the same setup.", "after": "> Run my weekly-status skill\\n\\n[Claude reads SKILL.md, pulls from your notes, outputs a formatted update in 20 seconds]"}, "p2l1": {"before": "50+ interviews completed with a specific user segment. Notes scattered across a dozen docs. You went in expecting UX complaints. Instead you keep hearing something structural: bookkeepers use the product differently from everyone else. You do not know yet what that means for the product.", "after": "Theme: This segment has a fundamentally different job to be done\\nFrequency: High — consistent across interviews\\nKey insight: Bookkeepers are not using the product for themselves — they are using it on behalf of others. The current flow was never designed for that.\\nSo what: One user intent does not fit all. Product direction changed: we built a dedicated flow for this segment rather than continuing to optimize a universal experience that did not fit their context."}, "p2l2": {"before": "You have internal feedback — NPS, support tickets, survey responses. It takes weeks to synthesize and by the time it is ready the team has already moved on to the next sprint. You suspect there is a faster signal somewhere.", "after": "After layering public community feedback alongside internal NPS and support data:\\nTop theme: Users attributed friction to one part of the product — but the pattern across sources showed the real issue was at the handoff between systems, not in any single team ownership area\\nPattern: Users could not tell what broke or where to go for help\\nSo what: The internal data was showing symptoms. The public data showed the cause. Combining both gave a clearer picture faster than either alone."}, "p2l3": {"before": "Three competitors you need to brief leadership on. You have tabs open from three different months, notes in two different docs, and a vague memory that one of them just changed their pricing model.", "after": "Competitor matrix: three players in the same space\\nFor each: core features, pricing model, target customer, recent changes\\nGap identified: None of them communicate system status to end users during failures — they all fail silently\\nTime: 25 minutes to build, ready for the leadership meeting"}, "p2l4": {"before": "You have synthesized the bookkeeper interviews and a clear pattern has emerged: this segment uses the product in a way the current flow does not support. That changes what needs to be built. But the platform mandate is to serve all segments consistently. You need a decision to go in a different direction.", "after": "Decision Brief: Dedicated flow for bookkeeper segment\\nSituation: Bookkeepers represent a significant portion of the user base but operate in a context the current flow was not designed for.\\nFinding: This segment fails at a materially higher rate than others. The fix requires a purpose-built flow, not a copy or instruction change.\\nOptions: (A) Build a dedicated flow (B) Add contextual guidance to the existing flow (C) Treat as out of scope\\nRecommendation: Option A. Clear segment need, measurable outcome, scoped investment.\\nResult: Shipped. Meaningful improvement in conversion and task completion rates for this segment."}, "p3l1": {"before": "You describe a feature in a meeting. Design says they will mock it up next sprint. By the time it is ready the team has moved on and the feedback is stale.", "after": "You write a precise brief: user, context, job to be done, success condition. Claude builds a working prototype in 20 minutes. You share it in Slack that afternoon. Feedback arrives before the meeting ends."}, "p3l2": {"before": "You run a usability study. Recruiting takes 2 weeks. The prototype is already out of date. The report comes back 10 days later. By then the sprint is locked.", "after": "Monday 9am: prototype v1 shared with 3 users. Feedback captured in structured notes. Claude updates the prototype and synthesizes patterns by noon. Monday 2pm: prototype v2 tested with 3 more users. Two rounds of learning in one day. Hypothesis formed by end of day."}, "p3l3": {"before": "Three rounds of testing done. Lots of notes. Team meeting tomorrow. You are not sure what you learned or what to build. The meeting becomes a debate about opinions rather than a review of evidence.", "after": "Three rounds synthesized: the core flow is validated, one interaction pattern consistently confused users, one assumption was wrong. Hypothesis formed: changing the information hierarchy at step 2 will reduce drop-off. Spec written from the prototype, not from scratch. Eng picks it up with context already baked in."}, "p3l4": {"before": "Sprint planning. PM describes a feature verbally. Design needs a week to mock it up. Eng estimates based on the verbal description. Three weeks later the first working version looks nothing like what anyone imagined.", "after": "PM brings a working prototype to sprint planning. Design reacts to interaction patterns, not a description of them. Eng sees the intended behavior before writing a line of code. Estimate is grounded in something real. First production version is much closer to the intent. Revision cycle shrinks."}, "p4l1": {"before": "Engineer: the issue is in the OAuth token refresh handler in the auth middleware.\\nYou: got it. (You have no idea what that means or where to look.)", "after": "You: I looked at /src/auth/middleware.js — it looks like the token refresh only runs on page load, not on API calls. Is that what is causing the session drops?\\nEngineer: Exactly. You got it."}, "p4l2": {"before": "You are a platform PM. Your eng team builds capabilities that three different offering teams depend on. Each offering team has their own PM who also wants status. Your tech lead is fielding questions from four directions and producing for none of them.", "after": "You own the communication layer. One async update per week, written clearly enough that all three offering teams get what they need without going directly to eng. Tech lead gets one decision per sprint pre-framed with options and your recommendation. Eng velocity increases. Your tech lead stops fielding the same question from three different Slack threads."}, "p4l3": {"before": "You are standardizing the connection UX across three products that have drifted apart over years. Design shows you three sets of comps. You have opinions based on instinct, not the bookkeeper interviews you just finished.", "after": "Feedback structured before the design review:\\nWhat research supports: This segment needs to see status information earlier in the flow — the comp addresses that well\\nSpecific concern: The error state uses red text only. 15% of users are colorblind and this is a high-stakes surface. Can we add an icon?\\nSigning off on: The overall flow sequence and the reconnect pattern\\nNot signing off yet: Error states across all three surfaces until we align on an accessibility standard\\nThe designer had something concrete to act on. Review took 25 minutes instead of 90."}, "p4l4": {"before": "PM clicks through the happy path. Looks good. Ships. Three hours later a support ticket: what happens if I upload a file with a comma in the filename? Nobody thought of that.", "after": "Claude generates 23 edge cases from the spec. PM tests 10 of them. Finds 2 bugs. They are fixed before launch. Support ticket never arrives."}, "p5l1": {"before": "You need to answer a product question that requires joining three data tables. You have not written SQL in years. Asking the data team means a 3-day wait and you need this before tomorrow.", "after": "You describe the question to Claude in plain English. It writes the query, you run it, and in 15 minutes you have the answer: a small segment of your traffic is dramatically underperforming the rest. The problem is not product quality — it is routing and distribution. That single query changed the roadmap priority."}, "p5l2": {"before": "A top-line success metric that has held steady for years. Leadership is confident. But when a team ships something, they cannot tell if the metric moved because of their work or despite it. The signal is real — the resolution is not.", "after": "Metric tree built underneath the top-line rate. Decomposed into the independent forces that drive it: coverage, flow completion by segment, lifecycle health, and session behavior. The top-line stays as the north star. Underneath it: faster, more specific indicators — each tied to a lever a team can actually pull. Now when something ships, the team can see which component moved and whether it held. The top-line metric got more meaningful, not replaced."}, "p5l3": {"before": "You have done the decomposition. You know which operating metrics explain the top-line. But getting three separate teams to adopt a shared measurement framework is not a small ask — and showing up with a deck of new metrics is not a recommendation anyone can act on.", "after": "Memo: Introduce operating metrics to give our top-line more signal and more levers.\\nRecommendation: Adopt a small set of leading indicators alongside the top-line — each one explains a different driver of it.\\nStrongest objection: We already have a metric. Why add more?\\nResponse: The top-line tells us where we are. The operating metrics tell us why we are there and what to do next. They make the existing metric more powerful, not redundant.\\nConfidence: High. Early cuts show the new indicators already explain recent movements in the top-line.\\nDecision needed: Before planning so teams can set roadmaps against the right levers."}, "p5l4": {"before": "Your team runs 1-2 experiments per month. Half do not reach significance before someone calls the result. The other half get shipped on instinct. You are rolling out a new experimentation platform and need teams to actually trust what it tells them.", "after": "First experiment on the new platform: Apple Pay and Google Wallet integration at checkout. Sample size calculated upfront. Runtime committed before launch. Result: +8% conversion, statistically significant. Shipped with confidence.\\nSix months later: 6+ experiments running per month across 25 product teams. The shift was not the tool — it was designing the test before running it. Once teams committed to a sample size in advance, they stopped calling results early."}, "p6l1": {"before": "You need a PRD for a platform capability that touches multiple systems, multiple teams, and multiple user segments. The standard feature template has none of the right sections. You spend two hours on structure before writing a word of substance.", "after": "> Run PRD skill for [platform capability]\\n\\n[Claude reads your CLAUDE.md, understands the platform context and user segments. Generates a PRD with sections that fit a platform capability: problem framing, affected surfaces, success metrics by segment, rollout sequence, open questions by team. You start with substance, not structure.]"}, "p6l2": {"before": "You send a doc proposing a new operating metrics framework to sit alongside the top-line connection rate. The argument feels solid. Then in the review the VP of Engineering asks: if we add three new metrics, how do we stop teams from optimizing for the easy one and ignoring the hard ones? You did not have an answer ready.", "after": "Before sending: you run the doc through Claude as your VP of Engineering. It surfaces the gaming concern immediately. You add a section on how the metrics relate — they are components of the top-line, not independent targets, so optimizing one at the expense of another shows up in the composite. You run it as an offering team PM whose roadmap is already locked. Their objection: my team cannot absorb new measurement overhead mid-quarter. You add a phased adoption appendix. The actual review takes 20 minutes. Both objections come up. Both are already answered."}, "p6l3": {"before": "You are mid-platform migration. Signal is scattered — adoption in one dashboard, escalations in another, eng velocity in Jira, churn risk in Salesforce. Leadership wants a weekly update and you are starting from four different tools.", "after": "Raw input pasted Friday at 4pm: adoption numbers, this week escalations, two accounts flagged as at-risk, three capabilities shipped.\\nOutput 90 seconds later:\\nShipped: Core capability now live across all surfaces\\nIn Progress: Top migration milestones on track for next week\\nBlockers: Two accounts flagged at-risk — need outreach before Thursday\\nNext Week: Targeting next adoption milestone\\nLeadership read it in 3 minutes. One action item. Weekend intact."}, "p6l4": {"before": "12-slide deck. Slide 3: a chart with 8 lines and no title. Slide 7: a table with 40 rows. The audience reads the slides. You are not needed.", "after": "8-slide deck. Every slide has one point. The chart has one line highlighted. The table has 3 rows. The audience listens to you. You are the story."}, "p7l1": {"before": "Four projects. Each in a different folder with different naming. Some have CLAUDE.md, some do not. Skills scattered across the desktop. New session means starting from scratch.", "after": "One workspace. Every project has a CLAUDE.md. Skills live in /skills. Three commands, and Claude knows your entire context for the day."}, "p7l2": {"before": "Sprint planning prep: pull tickets from Jira, copy into Notion, write context for each, estimate effort, share with team. 2 hours every other week.", "after": "> Run sprint-prep workflow\\n\\n[Claude pulls tickets, adds context from strategy.md, estimates effort, formats for Notion]\\nTime: 8 minutes."}, "p7l3": {"before": "A PM with a well-organized laptop but no connected workflow. Every tool is good. The transitions between tools eat 40% of the day.", "after": "A PM whose Claude Code workspace connects research to spec to comms to review. The transitions are prompts. The thinking is what takes time — as it should."}, "p7l4": {"before": "You tell your team about Claude Code in a meeting. They nod. Two weeks later nobody has set it up. The idea dies.", "after": "You run a 15-minute demo on a problem your teammate is currently stuck on. They see it solve something real. They set it up that afternoon."}};
+
+const curriculum = [
+  {
+    id:'p1',num:'P1',title:'Get Oriented',
+    subtitle:'Understand how Claude Code works and set it up to fit the way you work',
+    lessons:[
+      {id:'p1l1',num:'1.1',time:'30 min',difficulty:'easy',
+        title:'How Claude Code Actually Works',
+        subtitle:'Understand what Claude Code is, how it differs from Claude.ai, and run your first real session.',
+        concepts:[
+          {name:'The REPL Loop',desc:'How Claude Code processes your requests in a continuous cycle'},
+          {name:'Context Window',desc:'The working memory Claude holds during a session'},
+          {name:'Actions vs. Answers',desc:'Claude can do things, not just respond to questions'},
+          {name:'CC vs Claude.ai',desc:'When to use each and why CC is built for PM work'}
+        ],
+        exercise:'Open Claude Code in your terminal. Drop in a messy set of notes from your last planning meeting. Ask Claude to organize them into a PRD skeleton with sections for Problem, Goals, Non-Goals, and Success Metrics.',
+        prompts:['Here are my raw notes from our planning meeting. Please organize these into a PRD skeleton with sections: Problem Statement, Goals, Non-Goals, Success Metrics, and Open Questions. Preserve the original intent but clean up the language.\n\n[paste your notes here]'],
+        artifact:'Your first Claude Code-generated PRD skeleton',
+        quiz:{q:'What is the key difference between Claude.ai and Claude Code?',opts:['Claude Code is faster','Claude Code can take actions and use tools, not just answer questions','Claude Code has a bigger context window','Claude Code is only for engineers'],correct:1,explain:'Claude Code is built for taking action — it can read files, run code, connect to tools, and take multi-step actions. Claude.ai is primarily a chat interface.'}
+      },
+      {id:'p1l2',num:'1.2',time:'25 min',difficulty:'easy',
+        title:'Persistent Memory Across Sessions',
+        subtitle:'Set up CLAUDE.md so Claude always knows your project the moment you open a session.',
+        concepts:[
+          {name:'CLAUDE.md',desc:'A file Claude reads automatically at the start of every session'},
+          {name:'Project Memory',desc:'Persistent facts about your project Claude retains'},
+          {name:'Session vs. Persistent',desc:'What Claude knows in one session vs. what it knows across all of them'},
+          {name:'Living Document',desc:'CLAUDE.md should evolve as your project does'}
+        ],
+        exercise:'Create a CLAUDE.md file for a real project you work on. Include: project name, your role, the top 3 user segments, current phase, and the 2 most important open decisions. Start a new session and verify Claude reads it.',
+        prompts:['I want to create a CLAUDE.md file for my project. Ask me 5 questions to understand what to include, then generate the file in proper markdown format.'],
+        artifact:'A CLAUDE.md file that primes every future session',
+        quiz:{q:'Where does Claude Code look for CLAUDE.md by default?',opts:['Your home directory','A special Claude server','The root of your current working directory','Wherever you tell it each session'],correct:2,explain:'Claude Code reads CLAUDE.md from the root of the directory you open it in. One CLAUDE.md per project folder.'}
+      },
+      {id:'p1l3',num:'1.3',time:'35 min',difficulty:'medium',
+        title:'Your Three Core Files: project.md, strategy.md, change_log.md',
+        subtitle:'The document architecture that keeps every session grounded and every decision traceable.',
+        concepts:[
+          {name:'project.md',desc:'Your source of truth — what the product is, who it serves, what success looks like'},
+          {name:'strategy.md',desc:'The living output — where Claude writes the current strategic direction'},
+          {name:'change_log.md',desc:'The decision trail — what changed, when, and why'},
+          {name:'Chat to Code handoff',desc:'Think in Claude.ai, execute in Claude Code, pass context via these files'}
+        ],
+        exercise:'Set up all three files for a real project. Start a session in Claude.ai to think through a product decision. Then open Claude Code, point it to your files, and have it write the decision into strategy.md and log it in change_log.md.',
+        prompts:['I have three files: project.md, strategy.md, and change_log.md. Please read project.md first, then help me think through [decision]. When we reach a conclusion, write it into strategy.md and log the decision with reasoning in change_log.md.'],
+        artifact:'A three-file project architecture you use every session from here on',
+        quiz:{q:'What is the main purpose of change_log.md?',opts:['Tracking bugs','Recording what changed and why — a decision trail you can audit and reverse','Logging errors','Storing prompts'],correct:1,explain:'change_log.md is not a git log — it captures the reasoning behind decisions, not just what changed. That reasoning is what makes it useful months later.'}
+      },
+      {id:'p1l4',num:'1.4',time:'40 min',difficulty:'medium',
+        title:'Building Skills You Reuse',
+        subtitle:'Create reusable skills so Claude gets more efficient every time you use it.',
+        concepts:[
+          {name:'SKILL.md Files',desc:'Reusable prompt packages Claude reads and applies automatically'},
+          {name:'Trigger Conditions',desc:'How Claude knows when to use a skill without being told'},
+          {name:'Prompt Templates',desc:'Parameterized prompts with fill-in slots for variable inputs'},
+          {name:'Skill Iteration',desc:'Each use is an opportunity to improve the skill for next time'}
+        ],
+        exercise:'Build a Weekly Status Update skill. It should take raw notes from anywhere and output a formatted leadership update with sections: Shipped, In Progress, Blockers, Next Week. Test it with a real week of notes.',
+        prompts:['Help me build a SKILL.md file for generating weekly status updates. The skill should accept raw bullet-point input, produce a formatted update with Shipped / In Progress / Blockers / Next Week sections, match a professional but concise tone, and be reusable without modification. Generate the full SKILL.md file.'],
+        artifact:'A reusable Weekly Status Update skill',
+        quiz:{q:'What makes a skill better than a saved prompt?',opts:['Skills are longer','Skills define when and how to apply them — they are a system, not just a template','Skills can only be used once','There is no real difference'],correct:1,explain:'A saved prompt is static. A skill includes trigger conditions, input expectations, and output specs. It compounds — every use teaches you how to improve it.'}
+      }
+    ]
+  },
+  {
+    id:'p2',num:'P2',title:'Know Your Users',
+    subtitle:'Turn raw signals — interviews, feedback, and market data — into decisions',
+    lessons:[
+      {id:'p2l1',num:'2.1',time:'35 min',difficulty:'easy',
+        title:'Extracting Insights from User Interviews',
+        subtitle:'Turn raw transcripts into structured insight documents in minutes, not hours.',
+        concepts:[
+          {name:'Transcript Parsing',desc:'Extracting structured data from messy interview text'},
+          {name:'Quote Extraction',desc:'Pulling the most signal-rich verbatims'},
+          {name:'Theme Clustering',desc:'Grouping observations into patterns across multiple interviews'},
+          {name:'Outlier Detection',desc:'Spotting the one-off that changes the direction'}
+        ],
+        exercise:'Drop in 3 real (or anonymized) interview transcripts. Ask Claude to identify themes, extract the top quotes, and produce an insight synthesis document.',
+        prompts:['Here are 3 user interview transcripts. Please: (1) identify the top 5 themes across all 3, (2) extract the 3 best verbatim quotes per theme, (3) note any contradictions or outliers, and (4) produce a structured insight synthesis document.\n\n[paste transcripts]'],
+        artifact:'An insight synthesis document with themes and verbatim quotes',
+        quiz:{q:'Why does verbatim quote extraction matter in research synthesis?',opts:['Quotes fill space in the doc','Direct user language is harder for stakeholders to dismiss than paraphrase','It is required by research standards','It takes less time'],correct:1,explain:'A paraphrase is your interpretation. A verbatim quote is the user\'s voice. Stakeholders push back on interpretations; they feel the weight of direct quotes differently.'}
+      },
+      {id:'p2l2',num:'2.2',time:'30 min',difficulty:'easy',
+        title:'Making Sense of Large Feedback Sets',
+        subtitle:'Process NPS verbatims, support tickets, and survey responses at scale.',
+        concepts:[
+          {name:'Sentiment Bucketing',desc:'Grouping feedback by positive, negative, neutral'},
+          {name:'Theme Extraction',desc:'Finding what keeps coming up across hundreds of responses'},
+          {name:'Priority Ranking',desc:'Scoring themes by frequency and severity together'},
+          {name:'Actionable Findings',desc:'Translating patterns into specific next steps'}
+        ],
+        exercise:'Gather 50+ pieces of raw feedback — NPS comments, App Store reviews, support tickets. Feed them to Claude and get back a prioritized findings report.',
+        prompts:['Here is a set of raw customer feedback. Please: (1) extract all themes mentioned more than twice, (2) rank by frequency, (3) separate praise from complaints, (4) identify the top 3 actionable issues, (5) produce a findings report I can share with leadership.\n\n[paste feedback]'],
+        artifact:'A prioritized feedback report ready for leadership',
+        quiz:{q:'What makes a finding actionable?',opts:['It is short','It points to a specific decision or change the team can make','It uses bullet points','It has data attached'],correct:1,explain:'"Users are frustrated with onboarding" is an observation. "Add a progress indicator to the 4-step setup flow" is actionable. One describes a feeling; the other describes a change.'}
+      },
+      {id:'p2l3',num:'2.3',time:'40 min',difficulty:'medium',
+        title:'Running Competitive Analysis with Claude',
+        subtitle:'Build a repeatable workflow for competitive research you can run any time.',
+        concepts:[
+          {name:'Structured Research',desc:'Instructing Claude to research systematically, not randomly'},
+          {name:'Competitor Matrix',desc:'A structured comparison across features, positioning, and pricing'},
+          {name:'Gap Identification',desc:'Where your product has space competitors have left open'},
+          {name:'Repeatability',desc:'A workflow you run fresh every quarter with one prompt'}
+        ],
+        exercise:'Pick 3 real competitors. Ask Claude to research each across: features, pricing, target customer, differentiators, and recent changes. Produce a matrix and identify 2 gaps your product can own.',
+        prompts:['Research these 3 competitors: [A], [B], [C]. For each: core features, pricing model, target customer, key differentiators, notable recent changes. Then produce a comparison matrix and identify 2 gaps none of them are owning well.'],
+        artifact:'A competitive matrix with positioning gaps called out',
+        quiz:{q:'What is the most useful output of competitive analysis?',opts:['Knowing their prices','Finding gaps — space competitors are not occupying that you could own','Building the longest feature list','Matching their features exactly'],correct:1,explain:'The goal is not to copy competitors — it is to find what they are all ignoring. Gaps are where strategy lives.'}
+      },
+      {id:'p2l4',num:'2.4',time:'35 min',difficulty:'medium',
+        title:'From Research to a Decision Brief',
+        subtitle:'Combine everything you have learned into one brief leadership can act on.',
+        concepts:[
+          {name:'Evidence Hierarchy',desc:'Ranking sources by how much weight they should carry'},
+          {name:'Brief Structure',desc:'Situation → Findings → Options → Recommendation'},
+          {name:'One Page Rule',desc:'One page forces clarity; two pages invites debate'},
+          {name:'Recommendation Framing',desc:'How to phrase a recommendation so it generates a decision, not a discussion'}
+        ],
+        exercise:'Take outputs from lessons 2.1–2.3. Ask Claude to synthesize them into a 1-page decision brief with: situation, findings, options, and a clear recommendation.',
+        prompts:['I have these research outputs: [paste]. Please synthesize into a 1-page decision brief: Situation (2 sentences), Key Findings (max 5 bullets), Options Considered (2-3), Recommended Action (1 sentence), Why Now. Audience: my VP of Product.'],
+        artifact:'A 1-page decision brief ready to send',
+        quiz:{q:'What separates a decision brief from a research report?',opts:['Length','A brief ends with a specific recommended action — a report just presents findings','Formatting','The audience'],correct:1,explain:'Research reports inform. Decision briefs drive action. The test: after reading it, does the stakeholder know exactly what you are recommending they do?'}
+      }
+    ]
+  },
+  {
+    id:'p3',num:'P3',title:'Build and Learn Fast',
+    subtitle:'Go from idea to working product in hours — and iterate with real users before writing a line of production code',
+    lessons:[
+      {id:'p3l1',num:'3.1',time:'40 min',difficulty:'medium',
+        title:'The PM Brief: From Problem to Working Prototype',
+        subtitle:'The quality of what Claude builds is determined by the quality of your brief. This lesson is about writing briefs that produce something worth testing.',
+        concepts:[
+          {name:'The PM Brief',desc:'A precise problem description that gives Claude enough context to build the right thing — not just a thing'},
+          {name:'User + Context + Constraint',desc:'The three inputs that separate a good brief from a vague one'},
+          {name:'0 to 1',desc:'Going from no artifact to a working, clickable prototype in a single session'},
+          {name:'Brief Iteration',desc:'When the first prototype is wrong, the brief was wrong — how to diagnose and fix it'}
+        ],
+        example:{before:'You describe a feature in a meeting. Design says they will mock it up next sprint. By the time it is ready the team has moved on and the feedback is stale.',after:'You write a precise brief: user, context, job to be done, what success looks like in the flow. Claude builds a working prototype in 20 minutes. You share it in Slack that afternoon. Feedback arrives before the meeting ends.'},
+        exercise:'Pick a feature you have been thinking about but have not built yet. Write a PM brief — user, context, job to be done, and success condition. Ask Claude to build a working HTML prototype from it. If the first version is wrong, diagnose whether the brief was wrong and rewrite it. Get to something worth showing a user.',
+        prompts:['I want to build a working prototype. Here is my PM brief:\n\nUser: [describe who this is for and their context]\nJob to be done: [what they are trying to accomplish]\nFlow: [describe each step]\nSuccess condition: [what does good look like at the end]\nConstraints: [anything Claude should know — mobile only, simple, no login, etc]\n\nBuild an HTML prototype I can open in a browser and share with users today.'],
+        artifact:'A working prototype built from a precise PM brief — and the brief itself as a reusable template',
+        quiz:{q:'What most determines the quality of a Claude-generated prototype?',opts:['The complexity of the feature','The quality of the PM brief — the precision of the problem description','How much time you spend prompting','Whether you use HTML or React'],correct:1,explain:'Claude builds what you describe. Vague brief, vague prototype. The PM brief is the real skill — the prototype is just the output.'}
+      },
+      {id:'p3l2',num:'3.2',time:'50 min',difficulty:'medium',
+        title:'Rapid Iterative Testing: 1 to 1.n in a Day',
+        subtitle:'Run multiple rounds of user feedback on a working prototype — updating between sessions — and compress weeks of iteration into hours.',
+        concepts:[
+          {name:'1 to 1.n',desc:'Running multiple rapid iteration cycles on a working prototype before writing production code'},
+          {name:'Lightweight Usability Sessions',desc:'15-minute sessions with real users that produce actionable signal — not a formal study'},
+          {name:'Structured Feedback Capture',desc:'Capturing what you observe in a format Claude can synthesize across rounds'},
+          {name:'Between-Session Updates',desc:'Using Claude to update the prototype between sessions so each round tests something new'}
+        ],
+        example:{before:'You run a usability study. Recruiting takes 2 weeks. The prototype is already out of date. The report comes back 10 days later. By then the sprint is locked.',after:'Monday 9am: prototype v1 shared with 3 users. Feedback captured in structured notes. Claude updates the prototype and synthesizes patterns by noon. Monday 2pm: prototype v2 tested with 3 more users. Two rounds of learning in one day. Hypothesis formed by end of day.'},
+        exercise:'Take the prototype from lesson 3.1. Identify 3 people you can show it to today — a teammate, a customer, anyone who represents the user. Run a 15-minute session with each. Capture structured observations. Ask Claude to synthesize patterns across the three sessions and update the prototype. Run one more round with the updated version.',
+        prompts:['I just ran [N] usability sessions on my prototype. Here are my structured observations from each session:\n\n[paste session notes]\n\nPlease: (1) identify the top 3 patterns across all sessions, (2) separate observations about the flow from observations about the UI, (3) flag anything users did that surprised you, (4) recommend the highest-impact change for the next prototype version, (5) update the prototype with that change.'],
+        artifact:'A prototype updated across multiple test rounds and a synthesis document showing what changed and why',
+        quiz:{q:'What makes rapid iterative testing different from a standard usability study?',opts:['It is less rigorous','It is faster because you skip synthesis','You update the prototype between rounds and test again — the loop closes in hours, not weeks','You need fewer participants'],correct:2,explain:'The power is in the loop. Each round informs the next. By the time you form a hypothesis you have evidence from multiple iterations, not just one session.'}
+      },
+      {id:'p3l3',num:'3.3',time:'35 min',difficulty:'medium',
+        title:'When to Stop Iterating — Forming a Hypothesis Worth Shipping',
+        subtitle:'How to recognize the point of diminishing return, synthesize what you learned, and translate it into a hypothesis you can ship and measure.',
+        concepts:[
+          {name:'Diminishing Return Signal',desc:'How to recognize when additional iteration rounds are producing noise, not signal'},
+          {name:'Learning Synthesis',desc:'Combining observations across multiple rounds into a coherent picture of what users need'},
+          {name:'The Hypothesis Statement',desc:'A specific, testable prediction about what will happen when you ship — and how you will measure it'},
+          {name:'From Prototype to Spec',desc:'What the prototype and test rounds tell eng and design before a line of production code is written'}
+        ],
+        example:{before:'Three rounds of testing done. Lots of notes. Team meeting tomorrow. You are not sure what you learned or what to build. The meeting becomes a debate about opinions rather than a review of evidence.',after:'Three rounds synthesized: the core flow is validated, one interaction pattern consistently confused users, one assumption was wrong. Hypothesis formed: changing the information hierarchy at step 2 will reduce drop-off. Spec written from the prototype, not from scratch. Eng picks it up with context already baked in.'},
+        exercise:'Take the feedback and iterations from lesson 3.2. Ask Claude to synthesize everything across all rounds into a single learning document. Identify where you have confidence and where you do not. Write a hypothesis statement for what you will ship. Decide: what does success look like in the data after you ship it?',
+        prompts:['Here are my notes and observations from [N] rounds of prototype testing:\n\n[paste all session notes and iteration decisions]\n\nPlease: (1) synthesize the top 3 things we learned with confidence, (2) identify what we still do not know, (3) draft a hypothesis statement in the format: we believe [change] will result in [outcome] because [evidence], (4) list what this prototype tells eng and design that a spec written from scratch would not.'],
+        artifact:'A learning synthesis document and a hypothesis statement ready to hand to the triad',
+        quiz:{q:'How do you know when to stop iterating and ship?',opts:['When you run out of time','When the team agrees the prototype looks good','When additional rounds are producing the same observations and you have a clear hypothesis you can measure','When eng says they are ready'],correct:2,explain:'You stop when you are learning less with each round and you have a specific, testable prediction about what will happen when you ship. That is the signal that iteration has done its job.'}
+      },
+      {id:'p3l4',num:'3.4',time:'45 min',difficulty:'advanced',
+        title:'Vibe Coding with Your Triad — PM as Catalyst',
+        subtitle:'How to use Claude-generated prototypes as a shared working surface for design and engineering — collapsing the brief-to-build cycle from weeks to hours without losing alignment.',
+        concepts:[
+          {name:'PM as Catalyst',desc:'The PM role in vibe coding is not to build everything alone — it is to produce a working artifact that collapses the abstraction gap for design and eng'},
+          {name:'Shared Working Surface',desc:'A prototype everyone can react to in the same room — faster than a PRD, more concrete than a wireframe'},
+          {name:'Design Handoff',desc:'What design needs from a Claude prototype to take it further — and what they do not need to rebuild from scratch'},
+          {name:'Eng Handoff',desc:'How a prototype changes the eng conversation — from estimating an abstraction to reacting to something real'},
+          {name:'Guardrails',desc:'What vibe coding is not — when to slow down, when to stop, and when production code needs to be written properly'}
+        ],
+        example:{before:'Sprint planning. PM describes a feature verbally. Design needs a week to mock it up. Eng estimates based on the verbal description. Three weeks later the first working version looks nothing like what anyone imagined. Two more weeks of revision.','after':'PM brings a working prototype to sprint planning. Design reacts to interaction patterns, not a description of them. Eng sees the intended behavior before writing a line of code. Estimate is grounded in something real. First production version is much closer to the intent. Revision cycle shrinks.'},
+        exercise:'Take the prototype and hypothesis from lessons 3.1-3.3. Bring it into a working session with your designer and tech lead. Have design identify what they would change and what they can build from. Have eng identify what the prototype tells them about scope and feasibility. Update the prototype based on their input. Document what each triad member now knows that they did not know before the session.',
+        prompts:['I have a working prototype that has been through [N] rounds of user testing. I am about to share it with my designer and tech lead. Please help me prepare:\n(1) A brief framing for the designer — what the prototype is trying to solve, what we learned from users, and what I want their reaction on\n(2) A brief framing for the tech lead — what the prototype is showing, what the open technical questions are, and what I need from them before we write a spec\n(3) A list of decisions this session should produce so we leave with alignment, not more questions'],
+        artifact:'A triad session plan and a post-session alignment doc — decisions made, open questions resolved, next steps owned',
+        quiz:{q:'What is the PM role in vibe coding with the triad?',opts:['To build the entire product alone using Claude','To write all the code and hand it to eng to clean up','To produce a working artifact that collapses the abstraction gap — giving design and eng something real to react to instead of a description','To replace the need for design and engineering'],correct:2,explain:'Vibe coding is not about PMs replacing their triad. It is about using Claude to produce a working artifact fast enough that design and eng can react to something real — which is faster, more aligned, and more accurate than building from a verbal description or a static spec.'}
+      }
+    ]
+  },
+  {
+    id:'p4',num:'P4',title:'Work with Your Team',
+    subtitle:'The PM is not a solo operator — this part teaches how you work with engineering and design across the full delivery cycle',
+    lessons:[
+      {id:'p4l1',num:'4.1',time:'30 min',difficulty:'easy',
+        title:'Reading a Codebase Without Writing Code',
+        subtitle:'Navigate a real codebase and understand what it does — no prior experience needed.',
+        concepts:[
+          {name:'File Structure',desc:'How codebases are organized and what each folder signals'},
+          {name:'Code as a Map',desc:'Reading for intent and structure, not syntax'},
+          {name:'Plain-English Tours',desc:'Asking Claude to explain any file in language you can use'},
+          {name:'Data Models',desc:'What the database schema tells you about product decisions made long ago'}
+        ],
+        example:{before:'Engineer: the issue is in the OAuth token refresh handler in the auth middleware.\nYou: got it. (You have no idea what that means or where to look.)',after:'You: I looked at /src/auth/middleware.js — it looks like the token refresh only runs on page load, not on API calls. Is that what is causing the session drops?\nEngineer: Exactly. You got it.'},
+        exercise:'Clone a public open-source project. Ask Claude to give you a PM-level tour: what it does, how it is organized, where the key user-facing features live.',
+        prompts:['I have cloned this repo. Give me a PM-level tour: (1) what this product does in one sentence, (2) how the codebase is organized — key folders and what they contain, (3) where the main user-facing features are implemented, (4) what the database models tell us about the data model. Explain as if I have never read code before.'],
+        artifact:'A plain-English codebase summary you can reference in sprint planning',
+        quiz:{q:'Why is it useful for a PM to navigate a codebase?',opts:['To replace engineers','To write code faster','To ask better questions and catch scope issues earlier','It is not useful for PMs'],correct:2,explain:'You do not need to write code. You need to read it like a map. PMs who can do this have more precise conversations and catch expensive misalignments before they ship.'}
+      },
+      {id:'p4l2',num:'4.2',time:'35 min',difficulty:'medium',
+        title:'Pairing with Engineering',
+        subtitle:'How to work alongside your tech lead without slowing them down or stepping on their toes.',
+        concepts:[
+          {name:'Spec Readiness',desc:'The bar a spec needs to clear before eng picks it up'},
+          {name:'Proposing Changes',desc:'Structuring a change request so eng can move without back-and-forth'},
+          {name:'Unblocking vs. Deciding',desc:'When PM should step in vs. when to let eng figure it out'},
+          {name:'Async Communication',desc:'How to communicate with eng in a way that respects deep work'}
+        ],
+        example:{before:'You finish research, know what to build, write the spec. Three days after handing it to engineering there are 14 Slack messages. The spec described what to build but not the context the user operates in. That context changes how the flow needs to work.',after:'Spec sent then user context mapped explicitly in design review then edge cases documented before eng picks it up then 2 clarifying questions from eng (expected) then ships then measurable improvement in segment conversion.\nThe difference: the spec was grounded in actual user context before engineering touched it.'},
+        exercise:'Pick a feature currently in development. Use Claude to draft a spec readiness checklist, an async update request to your tech lead, and a list of decisions you own vs. decisions you should defer to eng.',
+        prompts:['I am working with my tech lead on [feature]. Please help me: (1) create a spec readiness checklist — what should be resolved before eng picks up a ticket, (2) draft an async status update request that respects their focus time, (3) list the decisions I own as PM vs. the ones I should defer to eng judgment.'],
+        artifact:'A spec readiness checklist and an async eng communication template',
+        quiz:{q:'What does a tech lead most need from their PM?',opts:['Daily status check-ins','Clear decisions made upfront so they can build without constant interruption','More detailed specs','Faster approvals'],correct:1,explain:'Engineers do their best work with clear direction and uninterrupted time. The PM job is to front-load the decisions so eng can move fast once they start.'}
+      },
+      {id:'p4l3',num:'4.3',time:'35 min',difficulty:'medium',
+        title:'Pairing with Design',
+        subtitle:'Give design feedback that is specific, actionable, and grounded in user needs — not personal taste.',
+        concepts:[
+          {name:'Design Review Structure',desc:'How to run a review that generates useful feedback, not opinion soup'},
+          {name:'Needs vs. Solutions',desc:'Separating what users need from how design chose to solve it'},
+          {name:'Research-Grounded Feedback',desc:'Using what you learned in testing to make feedback specific rather than subjective'},
+          {name:'Approval vs. Sign-off',desc:'When PM approves direction vs. when design owns the final call'}
+        ],
+        example:{before:'You are standardizing UX across three products that have drifted apart over years. Design shows you three sets of comps. You have opinions based on instinct, not the user testing you just finished.',after:'Feedback structured before the design review:\nWhat research supports: this segment needs to see status information earlier in the flow — the comp addresses that well\nSpecific concern: The error state uses red text only. 15% of users are colorblind and this is a high-stakes surface. Can we add an icon?\nSigning off on: The overall flow sequence and the reconnect pattern\nNot signing off yet: Error states across all three surfaces until we align on an accessibility standard\nThe designer had something concrete to act on. Review took 25 minutes instead of 90.'},
+        exercise:'Take a recent design comp you need to review. Use Claude to structure your feedback into: what user research supports, specific elements to reconsider, questions for the designer, and what you are signing off on.',
+        prompts:['I need to review this design comp for [feature]. Help me structure my feedback: (1) what user needs does this address well, (2) what specific elements raise questions — framed in user terms not aesthetics, (3) questions to bring to the designer, (4) what I am prepared to sign off on as PM.'],
+        artifact:'A structured design review document you can share with your designer',
+        quiz:{q:'What makes design feedback useful vs. unhelpful?',opts:['Useful feedback is longer','Useful feedback is specific, tied to a user need or constraint — not personal aesthetic preference','Useful feedback praises more than it critiques','Useful feedback comes from the PM alone'],correct:1,explain:'"This feels busy" is a feeling. "The primary action is competing with 4 other elements at the same visual weight" is a specific problem a designer can solve.'}
+      },
+      {id:'p4l4',num:'4.4',time:'40 min',difficulty:'medium',
+        title:'QA, Handoffs, and Getting to Launch',
+        subtitle:'The last 20% of a feature is where PMs earn their keep — or let things slip.',
+        concepts:[
+          {name:'PM QA',desc:'What a PM should test before eng closes a ticket'},
+          {name:'Edge Case Thinking',desc:'Using Claude to find the scenarios eng did not spec for'},
+          {name:'Launch Readiness',desc:'The checklist that keeps you from discovering problems in production'},
+          {name:'Participating in Code Review',desc:'What to look for in a pull request — scope, user impact, and what changed beyond the spec'}
+        ],
+        example:{before:'PM clicks through the happy path. Looks good. Ships. Three hours later a support ticket: what happens if I upload a file with a comma in the filename? Nobody thought of that.',after:'Claude generates 23 edge cases from the spec. PM tests 10 of them. Finds 2 bugs. They are fixed before launch. Support ticket never arrives.'},
+        exercise:'Take a feature currently in QA or recently shipped. Use Claude to generate a comprehensive edge case list from the spec. Test the top 5 you are most worried about. Then find a recent pull request and ask Claude to explain what it changes — leave one meaningful comment.',
+        prompts:['Here is the spec for [feature]: [paste]. Please generate: (1) a comprehensive edge case list grouped by category (empty states, error states, permissions, data limits, concurrent users), (2) the 5 most likely to cause a user-facing bug, (3) a PM QA checklist I can run before sign-off.\n\nAlso here is a recent PR diff: [paste]. Please explain what this changes in plain English and suggest 2-3 questions I should ask before it ships.'],
+        artifact:'An edge case list, a PM QA checklist, and your first meaningful PR comment',
+        quiz:{q:'What is the PM role in QA?',opts:['To replace QA engineers','To test the happy path only','To think about edge cases, user-facing errors, and scenarios the spec did not anticipate','To approve the final design'],correct:2,explain:'Eng QA tests functionality. PM QA tests reality — the weird inputs, the empty states, the users who do things in the wrong order. Both are needed.'}
+      }
+    ]
+  },
+  {
+    id:'p5',num:'P5',title:'Read the Numbers',
+    subtitle:'Pull answers from data, diagnose metric movements, and back your recommendations with evidence',
+    lessons:[
+      {id:'p5l1',num:'5.1',time:'35 min',difficulty:'easy',
+        title:'Getting Answers from Data Without Writing SQL',
+        subtitle:'Ask product questions in plain English — Claude handles the query.',
+        concepts:[
+          {name:'Natural Language to SQL',desc:'Ask in English; Claude writes the query'},
+          {name:'Result Interpretation',desc:'Making sense of what the numbers actually say'},
+          {name:'Iterative Analysis',desc:'Drilling from broad to specific across multiple questions'},
+          {name:'Data Quality',desc:'Knowing when to trust a number and when to question it'}
+        ],
+        exercise:'Drop in a CSV or describe your data schema. Ask 3 real product questions you have been wanting answers to. Get answers, then drill into the most interesting one with 2 follow-up questions.',
+        prompts:['Here is my dataset / schema: [describe or paste]. I have 3 product questions: (1) [question], (2) [question], (3) [question]. For each: write the SQL, show the result, interpret it in plain English, flag any data quality concerns.'],
+        artifact:'A data findings document with answers to 3 real product questions',
+        quiz:{q:'What is the most common mistake when interpreting data without a data analyst?',opts:['The charts look bad','Confusing correlation with causation — seeing a pattern and assuming it explains behavior','The queries are slow','You cannot share results'],correct:1,explain:'Two things moving together does not mean one caused the other. Good analysis generates alternative explanations and tests them before drawing conclusions.'}
+      },
+      {id:'p5l2',num:'5.2',time:'40 min',difficulty:'medium',
+        title:'Diagnosing What Moved a Metric',
+        subtitle:'Use structured root cause analysis to understand why a number went up or down.',
+        concepts:[
+          {name:'Metric Trees',desc:'Breaking a top-line number into the components that drive it'},
+          {name:'Decomposition',desc:'Isolating which component actually moved'},
+          {name:'Hypothesis Generation',desc:'Creating testable explanations before diving into data'},
+          {name:'Evidence Matching',desc:'Connecting each hypothesis to data that confirms or denies it'}
+        ],
+        exercise:'Pick a metric that moved recently. Build a metric tree with Claude. Generate 5 hypotheses ranked by likelihood. Design a quick data check for the top 2.',
+        prompts:['This metric moved: [metric] went [direction] by [amount] over [time period]. Please: (1) build a metric tree of components that roll up to this metric, (2) generate 5 ranked hypotheses for what drove the change, (3) for the top 2, tell me what data I need to confirm or deny them.'],
+        artifact:'A metric diagnosis document with ranked hypotheses',
+        quiz:{q:'What is a metric tree?',opts:['A chart of metric trends over time','A breakdown of a top-line metric into the components that drive it','A list of your team KPIs','A forecasting tool'],correct:1,explain:'A metric tree decomposes a top-line number into its drivers. It shows you where in the system something changed — which is the only way to diagnose a move without guessing.'}
+      },
+      {id:'p5l3',num:'5.3',time:'35 min',difficulty:'medium',
+        title:'Writing Recommendations That Get Decisions',
+        subtitle:'Turn analysis into a memo stakeholders trust and act on.',
+        concepts:[
+          {name:'Evidence Chain',desc:'The logical path from data to conclusion to recommendation'},
+          {name:'Confidence Levels',desc:'Being honest about how strong your evidence actually is'},
+          {name:'Preempting Objections',desc:'Addressing the counterargument before it is raised in the meeting'},
+          {name:'Decision Trigger',desc:'What specifically you are asking the stakeholder to decide'}
+        ],
+        exercise:'Take the analysis from lesson 5.2. Write a recommendation memo. Ask Claude to play a skeptical VP and pressure-test it before you send it.',
+        prompts:['Here is my analysis: [paste]. Help me write a recommendation memo: the recommendation in one sentence, 3 data points that support it, the strongest counterargument and my response, my confidence level and why, what would change my recommendation. Then critique it as a skeptical VP would.'],
+        artifact:'A recommendation memo with data backing and pre-tested objections',
+        quiz:{q:'What does stating a confidence level add to a recommendation?',opts:['It makes you look uncertain','It tells stakeholders how much to weight this input — and builds credibility through honesty','Recommendations should always sound certain','It is required by data teams'],correct:1,explain:'Stating uncertainty counterintuitively builds trust. "High confidence" on a big call signals that you know the difference between strong evidence and a hunch.'}
+      },
+      {id:'p5l4',num:'5.4',time:'40 min',difficulty:'advanced',
+        title:'Designing Experiments You Can Actually Run',
+        subtitle:'Set up tests that produce results you can trust — and know what to do when they come in.',
+        concepts:[
+          {name:'Experiment Design',desc:'The structure of a valid test — what you are changing and what you are measuring'},
+          {name:'Sample Size',desc:'How many users you need before the result means anything'},
+          {name:'Statistical Significance',desc:'What p < 0.05 actually means in plain English'},
+          {name:'Decision Framework',desc:'Ship, iterate, or stop — how to decide from the result'}
+        ],
+        exercise:'Design a real test for a feature you are planning. Use Claude to calculate the sample size. Interpret a set of sample results. Decide: ship, iterate, or stop.',
+        prompts:['I want to design a test for [feature]. Metric: [metric]. Baseline: [number]. Minimum detectable effect: [X%]. Please: (1) calculate the sample size I need, (2) estimate runtime given [traffic] users/week, (3) list 3 things that could invalidate this test, (4) generate sample results I can practice interpreting.'],
+        artifact:'An experiment design document and a results interpretation framework',
+        quiz:{q:'What does statistical significance mean in plain English?',opts:['The result is important','The result is unlikely to be due to random chance — we have enough data to trust it','The sample size was large enough','The test ran long enough'],correct:1,explain:'Significance means: the probability this result happened by chance is below our threshold (usually 5%). It does not mean the effect is large — just that it is real.'}
+      }
+    ]
+  },
+  {
+    id:'p6',num:'P6',title:'Communicate Clearly',
+    subtitle:'Write docs, updates, and presentations that are faster to produce and easier to act on',
+    lessons:[
+      {id:'p6l1',num:'6.1',time:'35 min',difficulty:'easy',
+        title:'A PRD Process That Improves Every Time',
+        subtitle:'Build a PRD skill that learns your style and gets better with every use.',
+        concepts:[
+          {name:'PRD Structure',desc:'The sections that make a PRD actionable vs. aspirational'},
+          {name:'Skill Iteration',desc:'Improving the skill based on each output — not starting over'},
+          {name:'Style Calibration',desc:'Teaching Claude your writing preferences once, not every session'},
+          {name:'Reuse',desc:'One skill that works for any feature — not a template you copy-paste'}
+        ],
+        exercise:'Build a PRD skill. Use it to generate a PRD for a real feature. Note 3 things to improve. Update the skill. Run it again. The second one should be noticeably better.',
+        prompts:['Help me build a PRD SKILL.md. My PRDs should: [describe style and required sections]. Include: a template with placeholders, instructions for handling ambiguous inputs, examples of tone. Generate the full SKILL.md file.'],
+        artifact:'A PRD skill and a sample PRD it generated',
+        quiz:{q:'Why build a skill rather than save a prompt?',opts:['Skills are longer','A skill compounds — it improves each time and works for any future PRD without rewriting','Prompts expire','Skills are more secure'],correct:1,explain:'A saved prompt is static. A skill is a system. Every PRD you write teaches you what the skill should do differently — and you update it accordingly.'}
+      },
+      {id:'p6l2',num:'6.2',time:'30 min',difficulty:'easy',
+        title:'Pressure-Testing Docs Before the Meeting',
+        subtitle:'Surface the hard questions before your stakeholders do.',
+        concepts:[
+          {name:'Stakeholder Perspectives',desc:'Instructing Claude to think from a specific role — not generically'},
+          {name:'Objection Surfacing',desc:'Finding the hard questions before the meeting does'},
+          {name:'Pre-Mortem Thinking',desc:'Assuming the project failed and working backwards to why'},
+          {name:'Revision Before Review',desc:'Arriving with objections already addressed'}
+        ],
+        exercise:'Take a doc you have written. Run it through 3 simulated reviews: VP Engineering (technical risk), a skeptical customer (value and disruption), your CFO (cost and ROI). Revise based on what surfaces.',
+        prompts:['Here is my doc: [paste]. Review it three times from different perspectives: (1) VP Engineering — technical risk and scope, (2) a skeptical enterprise customer — value and disruption to their workflow, (3) CFO — cost, ROI, and opportunity cost. Give me the top 3 objections from each.'],
+        artifact:'A pre-meeting objection log and a stronger revised document',
+        quiz:{q:'What is pre-mortem thinking?',opts:['Reviewing a project after it fails','Assuming the project already failed and working backwards to find why — before it happens','A final review before launch','A budget review'],correct:1,explain:'A pre-mortem asks: it is 6 months from now and this failed — what went wrong? It surfaces risks that optimistic planning tends to skip over.'}
+      },
+      {id:'p6l3',num:'6.3',time:'20 min',difficulty:'easy',
+        title:'Status Updates in Under Two Minutes',
+        subtitle:'Generate a polished weekly update from raw notes, tickets, and messages.',
+        concepts:[
+          {name:'Source Ingestion',desc:'Pulling content from wherever your week actually lived'},
+          {name:'Update Structure',desc:'Shipped / In Progress / Blockers / Next Week — the format that scans'},
+          {name:'Audience Calibration',desc:'What your VP needs vs. what your team needs'},
+          {name:'Time Saved',desc:'This task used to take 20 minutes. Now it takes 2.'}
+        ],
+        exercise:'Gather one week of raw input — Jira tickets, Slack threads, meeting notes, your own bullets. Ask Claude to generate a leadership-ready status update. Time yourself.',
+        prompts:['Here is my raw input from this week: [paste]. Generate a weekly status update for my VP: Shipped (what went out), In Progress (% complete where possible), Blockers (needs attention), Next Week (what is coming). 3-5 bullets per section. Direct and concise.'],
+        artifact:'A reusable status update skill and one real generated update',
+        quiz:{q:'What makes a status update leadership-ready?',opts:['It is long and detailed','It leads with what changed, what is at risk, and what you need — not a list of everything the team did','It covers all team activity','It has a polished subject line'],correct:1,explain:'Leadership reads for signal. Lead with what is different this week, what is at risk, and what decisions you need from them. Everything else is noise.'}
+      },
+      {id:'p6l4',num:'6.4',time:'40 min',difficulty:'medium',
+        title:'Presentations That Make an Argument',
+        subtitle:'Build a deck that builds toward a conclusion — not just a collection of slides.',
+        concepts:[
+          {name:'Narrative Structure',desc:'Each slide sets up the next — the deck builds a case'},
+          {name:'Data to Slide',desc:'Choosing the right visual for the point you are making'},
+          {name:'Speaker Notes',desc:'What to say that is not on the slide — and should not be'},
+          {name:'The So What Test',desc:'Every slide must answer why it matters before the audience asks'}
+        ],
+        exercise:'Build a product review or planning deck from your actual data. Ask Claude to design the narrative structure, generate chart code, and write speaker notes. Present it to yourself out loud.',
+        prompts:['I need to build a [type] deck. Audience: [who]. Metrics to cover: [list]. Narrative: [describe the story I want to tell]. Please: (1) suggest a slide structure, (2) describe the right visual for each slide, (3) write speaker notes for the opening, key finding, and close, (4) generate HTML for any charts I can embed.'],
+        artifact:'A structured deck with charts and speaker notes',
+        quiz:{q:'What separates a strong presentation from a data dump?',opts:['Length','A strong presentation builds toward one conclusion — a data dump shows all available information without a point','Number of charts','Who presents it'],correct:1,explain:'Every slide in a strong deck answers "so what?" If removing a slide would not change the argument, it should probably go.'}
+      }
+    ]
+  },
+  {
+    id:'p7',num:'P7',title:'Make It Stick',
+    subtitle:'Turn what you have learned into a daily practice and bring your team along',
+    lessons:[
+      {id:'p7l1',num:'7.1',time:'30 min',difficulty:'easy',
+        title:'Setting Up a Workspace That Works for You',
+        subtitle:'Organize Claude Code so it knows your projects and picks up where you left off.',
+        concepts:[
+          {name:'Workspace Structure',desc:'The folder hierarchy that organizes your PM work'},
+          {name:'Skill Registry',desc:'Knowing what skills you have and when to use them'},
+          {name:'First Session Check',desc:'Verifying Claude reads your setup correctly before relying on it'},
+          {name:'Naming Discipline',desc:'How you name files determines how reliably Claude can find them'}
+        ],
+        exercise:'Set up your PM workspace. Create the folder structure, write the CLAUDE.md, place your first 3 skills. Open Claude Code and verify it reads everything correctly.',
+        prompts:['Help me design a PM workspace in Claude Code. I work on [describe work]. I manage: [list activities]. Please: (1) design a folder structure, (2) explain what goes in each folder, (3) write a CLAUDE.md that describes my workspace and role, (4) tell me what 3 skills to build first.'],
+        artifact:'A structured PM workspace ready to use from session one',
+        quiz:{q:'Why does folder structure matter in Claude Code?',opts:['It does not — Claude finds everything automatically','Clear structure lets Claude navigate your work and lets you find anything in seconds','It is required by Anthropic','It saves disk space'],correct:1,explain:'Claude reads your file system. Tell it to check the research folder and it will — if the folder exists and is named clearly. Structure is context.'}
+      },
+      {id:'p7l2',num:'7.2',time:'40 min',difficulty:'medium',
+        title:'Turning Repetitive Work into One-Command Workflows',
+        subtitle:'The tasks you do every week should take one prompt, not twenty minutes.',
+        concepts:[
+          {name:'Workflow Design',desc:'Breaking a recurring task into steps Claude can execute reliably'},
+          {name:'Skill Chaining',desc:'Multiple skills running in sequence — output of one feeds the next'},
+          {name:'Trigger Prompts',desc:'The single sentence that kicks off a whole workflow'},
+          {name:'Time Audit',desc:'Measure how much time each workflow actually saves'}
+        ],
+        exercise:'Identify your top 3 most repetitive PM tasks. Build a workflow for each — a trigger prompt, the steps Claude runs, the expected output. Time all 3 and compare to your current process.',
+        prompts:['I want to build a repeatable workflow for [task]. My current process: [describe steps]. Please: (1) design a Claude Code workflow for each step, (2) write the trigger prompt, (3) identify which skills this workflow calls, (4) describe what the output should look like.'],
+        artifact:'3 working PM workflows, each triggered by a single prompt',
+        quiz:{q:'What makes a workflow worth building?',opts:['It is fully automated','It handles variable inputs and produces consistent, useful outputs every time','It runs on a schedule','It requires no human input at all'],correct:1,explain:'A good workflow handles the variability — different meetings, different features, different stakeholders — and still produces something useful every time. Consistency is the goal, not automation.'}
+      },
+      {id:'p7l3',num:'7.3',time:'50 min',difficulty:'advanced',
+        title:'Putting It All Together',
+        subtitle:'Run a full PM workday using everything you have built — and find what is still missing.',
+        concepts:[
+          {name:'End-to-End Sessions',desc:'Running a full PM task from problem to output without stopping to set up'},
+          {name:'Gap Finding',desc:'Noticing what is still slow and building the skill or workflow to fix it'},
+          {name:'Iteration Cadence',desc:'Your setup should get better every week — this is how'},
+          {name:'The Improvement List',desc:'A running list of what to build next, captured mid-session'}
+        ],
+        exercise:'Run a full session: start with a real product problem, use your research workflow, build a prototype, generate a PRD, produce a status update. Time the whole thing and capture what to improve.',
+        prompts:['I want to run a full PM session using everything I have set up. Problem: [describe]. Please: (1) check my CLAUDE.md and confirm my context, (2) suggest which skills and workflows to use in what order, (3) run the full sequence, (4) at the end tell me what I should add or improve based on what we hit today.'],
+        artifact:'A complete session transcript and a concrete improvement list',
+        quiz:{q:'What is the best indicator that your Claude Code setup is working?',opts:['You have the most skills','You use it every day without thinking about it — it is just how you work','You can demo it impressively','You have completed all 28 lessons'],correct:1,explain:'The goal is not an impressive setup. The goal is a setup that disappears into your workflow. When you stop noticing it, it is working.'}
+      },
+      {id:'p7l4',num:'7.4',time:'35 min',difficulty:'medium',
+        title:'Getting Your Team Started',
+        subtitle:'Bring a teammate from zero to their first useful session in under an hour.',
+        concepts:[
+          {name:'Skill Sharing',desc:'Packaging your skills so a teammate can use them without setup overhead'},
+          {name:'Onboarding Guide',desc:'Getting someone started without a long meeting or a long doc'},
+          {name:'Live Demo',desc:'Showing the value in real time on a real problem they already have'},
+          {name:'Shared Library',desc:'Skills your team builds and improves together over time'}
+        ],
+        exercise:'Write a one-page onboarding guide for a teammate new to Claude Code. Write a 15-minute demo script. Run the demo with one real person this week.',
+        prompts:['Help me write a one-page onboarding guide for a teammate new to Claude Code. They are a PM with [background]. Cover: (1) setup in under 15 minutes, (2) first session using my PRD skill, (3) first research workflow, (4) how to contribute to the shared skill library.'],
+        artifact:'A one-page onboarding guide and a 15-minute demo script',
+        quiz:{q:'What is the most effective way to get a teammate to actually adopt this?',opts:['Mandate it from leadership','Show them a result they could not have produced that fast any other way — let the output do the talking','Send documentation and a Loom','Run a mandatory training session'],correct:1,explain:'Adoption follows value. Show someone a real output on a real problem they are currently stuck on — in real time. That 15 minutes does more than any doc or mandate.'}
+      }
+    ]
+  }
+];
+
+const promptLibrary = [
+  {cat:'Research',items:[
+    {title:'Synthesize interview transcripts',prompt:'Here are [N] user interview transcripts. Please: (1) identify the top 5 themes across all interviews, (2) extract the 3 best verbatim quotes per theme, (3) note contradictions or outliers, (4) produce a structured insight synthesis document.\n\n[paste transcripts]'},
+    {title:'Prioritize raw feedback',prompt:'Here is a set of raw customer feedback. Please: (1) extract all themes mentioned more than twice, (2) rank by frequency, (3) separate praise from complaints, (4) identify the top 3 actionable issues, (5) produce a findings report I can share with leadership.\n\n[paste feedback]'},
+    {title:'Competitive matrix',prompt:'Research these 3 competitors: [A], [B], [C]. For each: core features, pricing model, target customer, key differentiators, notable recent changes. Then produce a comparison matrix and identify 2 gaps none of them are owning well.'},
+    {title:'Decision brief from research',prompt:'I have these research outputs: [paste]. Please synthesize into a 1-page decision brief: Situation (2 sentences), Key Findings (max 5 bullets), Options Considered (2-3), Recommended Action (1 sentence), Why Now. Audience: my VP of Product.'},
+    {title:'Research plan for a product question',prompt:'Help me write a research plan for this question: [question]. Include: hypothesis, 3 research methods, data sources, success criteria, and what decisions this research will inform.'}
+  ]},
+  {cat:'Product & Engineering',items:[
+    {title:'Codebase tour',prompt:'I have cloned this repo. Give me a PM-level tour: (1) what this product does in one sentence, (2) how the codebase is organized — key folders and what they contain, (3) where the main user-facing features are, (4) what the database models tell us about the data model. Explain as if I have never read code before.'},
+    {title:'Change request draft',prompt:'Here is the relevant code: [paste]. I want to [describe change]. Please: (1) explain what the code does now, (2) describe what the change would do, (3) estimate complexity S/M/L, (4) flag risks or dependencies, (5) draft the change request ticket.'},
+    {title:'PR review for PMs',prompt:'Here is the diff from this pull request: [paste diff]. Please: (1) explain in plain English what this change does, (2) flag any scope beyond the stated goal, (3) identify user-facing changes, (4) suggest 3 questions I as a PM should ask before this ships.'},
+    {title:'Edge case generator',prompt:'Here is the spec for [feature]: [paste]. Please generate: (1) a comprehensive edge case list grouped by category (empty states, errors, permissions, data limits, concurrent users), (2) the 5 most likely to cause a user-facing bug, (3) a PM QA checklist I can run before sign-off.'},
+    {title:'Spec readiness checklist',prompt:'I am handing off [feature] to engineering. Please create: (1) a spec readiness checklist — what should be resolved before eng picks up the ticket, (2) a list of the decisions I own as PM vs. decisions I should defer to eng judgment, (3) an async update template for checking in without interrupting deep work.'}
+  ]},
+  {cat:'Data & Decisions',items:[
+    {title:'Data questions to SQL',prompt:'Here is my dataset / schema: [describe or paste]. I have 3 product questions: (1) [question], (2) [question], (3) [question]. For each: write the SQL, show the result, interpret it in plain English, flag any data quality concerns.'},
+    {title:'Metric diagnosis',prompt:'This metric moved: [metric] went [direction] by [amount] over [time period]. Please: (1) build a metric tree of components that roll up to this, (2) generate 5 ranked hypotheses for what drove the change, (3) for the top 2, tell me what data I need to confirm or deny them.'},
+    {title:'Recommendation memo',prompt:'Here is my analysis: [paste]. Help me write a recommendation memo: the recommendation in one sentence, 3 data points that support it, the strongest counterargument and my response, my confidence level and why, what would change my recommendation. Then critique it as a skeptical VP would.'},
+    {title:'Experiment design',prompt:'I want to design a test for [feature]. Metric: [metric]. Baseline: [number]. Minimum detectable effect: [X%]. Please: (1) calculate sample size, (2) estimate runtime at [traffic] users/week, (3) list 3 threats to validity, (4) generate sample results I can practice interpreting.'}
+  ]},
+  {cat:'Communication',items:[
+    {title:'PRD from scratch',prompt:'Help me write a PRD for [feature]. Context: [describe the problem and user]. Please include: Problem Statement, Goals, Non-Goals, User Stories (top 5), Success Metrics, Open Questions, and Out of Scope. Use plain language — no jargon.'},
+    {title:'Stakeholder pressure test',prompt:'Here is my doc: [paste]. Review it three times from different perspectives: (1) VP Engineering — technical risk and scope, (2) a skeptical enterprise customer — value and disruption, (3) CFO — cost, ROI, opportunity cost. Give me the top 3 objections from each.'},
+    {title:'Weekly status update',prompt:'Here is my raw input from this week: [paste]. Generate a weekly status update for my VP: Shipped (what went out), In Progress (% complete where possible), Blockers (needs attention), Next Week (what is coming). 3-5 bullets per section. Direct and concise.'},
+    {title:'Design review feedback',prompt:'I need to review this design comp for [feature]. Help me structure feedback: (1) what user needs does this address well, (2) what specific elements raise questions — framed in user terms not aesthetics, (3) questions to bring to the designer, (4) what I am prepared to sign off on as PM.'},
+    {title:'Presentation narrative',prompt:'I need to build a [type] deck. Audience: [who]. Metrics: [list]. Narrative: [describe the story]. Please: (1) suggest a slide structure, (2) describe the right visual for each slide, (3) write speaker notes for the opening, key finding, and close.'}
+  ]},
+  {cat:'Workflow Setup',items:[
+    {title:'Generate CLAUDE.md',prompt:'I want to create a CLAUDE.md file for my project. Ask me 5 questions to understand what to include, then generate the file in proper markdown format.'},
+    {title:'Design my PM workspace',prompt:'Help me design a PM workspace in Claude Code. I work on [describe work]. I manage: [list activities]. Please: (1) design a folder structure, (2) explain what goes in each folder, (3) write a CLAUDE.md for the workspace, (4) tell me what 3 skills to build first.'},
+    {title:'Build a custom skill',prompt:'Help me build a SKILL.md file for [task type]. The skill should: [describe inputs and desired outputs]. Include: a template with placeholders, instructions for handling ambiguous inputs, an example of the ideal output. Generate the full SKILL.md file.'},
+    {title:'Build a repeatable workflow',prompt:'I want to build a repeatable workflow for [task]. My current process: [describe steps]. Please: (1) design a Claude Code workflow for each step, (2) write the trigger prompt, (3) identify which skills this workflow calls, (4) describe what the output should look like.'},
+    {title:'Three-file project setup',prompt:'Help me set up project.md, strategy.md, and change_log.md for [project name]. project.md should capture: [goals, users, success metrics]. strategy.md should start with [current strategic direction]. change_log.md should document: [first key decision]. Generate all three files.'}
+  ]}
+];
+
+let completed = JSON.parse(localStorage.getItem('cc4pm_v3') || '[]');
+let currentView = 'home';
+let currentLesson = null;
+
+function markDone(id){
+  if(!completed.includes(id)) completed.push(id);
+  localStorage.setItem('cc4pm_v3',JSON.stringify(completed));
+  updateProgress(); renderSidebar();
+}
+
+function updateProgress(){
+  const total = curriculum.reduce((s,p)=>s+p.lessons.length,0);
+  const done = completed.length;
+  document.getElementById('progress-pct').textContent=`${done} / ${total}`;
+  document.getElementById('progress-fill').style.width=`${(done/total)*100}%`;
+}
+
+function setNavActive(id){
+  ['nl-home','nl-start','nl-prompts'].forEach(n=>{
+    const el=document.getElementById(n);
+    if(el) el.classList.toggle('active',n===id);
+  });
+}
+
+function renderSidebar(){
+  const nav=document.getElementById('parts-nav');
+  nav.innerHTML=curriculum.map(part=>{
+    const open=currentLesson&&part.lessons.some(l=>l.id===currentLesson.id);
+    return `<div class="part-group ${open?'open':''}" id="pg-${part.id}">
+      <div class="part-header" onclick="togglePart('${part.id}')">
+        <span class="part-num">${part.num}</span>
+        <span class="part-name">${part.title}</span>
+        <span class="part-chevron">▶</span>
+      </div>
+      <div class="lessons-list">
+        ${part.lessons.map(l=>{
+          const done=completed.includes(l.id);
+          const active=currentLesson?.id===l.id;
+          return `<div class="lesson-item ${active?'active':''} ${done&&!active?'done':''}" onclick="openLesson('${l.id}');closeSidebar()">
+            <div class="lesson-dot"></div>${l.num} ${l.title.length>32?l.title.slice(0,32)+'…':l.title}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  updateProgress();
+}
+
+function togglePart(id){ document.getElementById(`pg-${id}`).classList.toggle('open'); }
+
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function topbar(breadcrumbs, actions=''){
+  return `<div class="topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('open')">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <div class="breadcrumb">${breadcrumbs}</div>
+    </div>
+    <div class="topbar-actions">${actions}</div>
+  </div>`;
+}
+
+function showHome(){
+  currentView='home'; currentLesson=null;
+  setNavActive('nl-home');
+  const total=curriculum.reduce((s,p)=>s+p.lessons.length,0);
+  document.getElementById('main-view').innerHTML=`
+    ${topbar('<span style="font-weight:700;color:var(--text)">Claude Code for PMs</span>')}
+    <div class="landing">
+      <div class="terms-banner">
+      <span>🔒</span>
+      <span><strong>Free to learn from.</strong> Not free to republish, sell, or redistribute. © 2026 Faran Najam — <a href="https://linkedin.com/in/farannajam" target="_blank" style="color:var(--blue)">LinkedIn</a></span>
+    </div>
+      <div class="landing-hero">
+        <div class="landing-eyebrow">Free course · No coding background needed · The craft is evolving</div>
+        <h2 class="landing-h1">The craft is evolving.<br><em>Your edge is knowing</em><br>how to use it.</h2>
+        <p class="landing-desc">The bar for great product work is rising. The PMs who stay ahead use AI to handle the heavy lifting — research synthesis, prototypes, data analysis, status updates — so they can spend more time on what actually requires them: listening to users, understanding the business, and bringing the right problems to their triad.</p>
+        <div class="landing-cta-row">
+          <button class="btn btn-primary" onclick="openLesson('p1l1')" style="padding:12px 28px;font-size:14px">Start lesson 1 →</button>
+          <button class="btn btn-ghost" onclick="showGettingStarted()" style="padding:12px 20px;font-size:14px">Setup guide first</button>
+        </div>
+        <p class="landing-note">Already set up? Pick any part below and start.</p>
+      </div>
+      <div class="differentiators">
+        <div class="diff-card">
+          <div class="diff-icon">⚡</div>
+          <div class="diff-title">More time on what only you can do</div>
+          <div class="diff-desc">AI handles the repeatable work — synthesis, drafts, data pulls, status updates. You get more time for what actually requires a human: listening to users, reading the room, and framing the right problem for your triad.</div>
+        </div>
+        <div class="diff-card">
+          <div class="diff-icon">🤝</div>
+          <div class="diff-title">The craft, not a shortcut</div>
+          <div class="diff-desc">The bar for great PM work is rising. This course meets you where you are and raises what you can do — more research, faster prototypes, clearer decisions, tighter collaboration.</div>
+        </div>
+        <div class="diff-card">
+          <div class="diff-icon">📁</div>
+          <div class="diff-title">From idea to working product. Today.</div>
+          <div class="diff-desc">Not next sprint. Not after design mocks it up. Go from problem to working prototype in one session, test it with users the same day, and bring something real to your triad — not a description of something real.</div>
+        </div>
+      </div>
+      <div class="stats-strip">
+        <div class="stat"><div class="stat-num">7</div><div class="stat-label">Parts</div></div>
+        <div class="stat"><div class="stat-num">${total}</div><div class="stat-label">Lessons</div></div>
+        <div class="stat"><div class="stat-num">${total}</div><div class="stat-label">Artifacts</div></div>
+        <div class="stat"><div class="stat-num">~6h</div><div class="stat-label">Total time</div></div>
+      </div>
+      <div class="section-heading">Course curriculum</div>
+      <div class="parts-grid">
+        ${curriculum.map(part=>`
+          <div class="part-card" onclick="openLesson('${part.lessons[0].id}')">
+            <div class="part-card-num">${part.num}</div>
+            <h3>${part.title}</h3>
+            <p>${part.subtitle}</p>
+            <div class="part-card-meta">${part.lessons.length} lessons · ${completed.filter(id=>part.lessons.some(l=>l.id===id)).length} complete</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  renderSidebar();
+}
+
+function showGettingStarted(){
+  currentView='start'; currentLesson=null;
+  setNavActive('nl-start');
+  document.getElementById('main-view').innerHTML=`
+    ${topbar(`<span onclick="showHome()" style="cursor:pointer">Home</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Getting started</span>`)}
+    <div class="gs-wrap">
+      <h1>Getting started</h1>
+      <p class="lesson-subtitle" style="margin-left:16px">Everything you need before opening lesson 1.</p>
+
+      <div class="section"><div class="section-label">What you need</div>
+        <div class="gs-step">
+          <div class="gs-num">1</div>
+          <div><div class="gs-title">An Anthropic account</div>
+          <div class="gs-body">Go to <a href="https://claude.ai" target="_blank">claude.ai</a> and create a free account. Claude Code requires a <strong>Pro plan ($20/month)</strong> or higher — the free tier does not include it. If your company has an Anthropic API contract, ask your IT or AI team about access.</div></div>
+        </div>
+        <div class="gs-step">
+          <div class="gs-num">2</div>
+          <div><div class="gs-title">Install Claude Code</div>
+          <div class="gs-body">Claude Code runs in your terminal. Install it with:<br><br>
+          <code>npm install -g @anthropic-ai/claude-code</code><br><br>
+          You need Node.js 18 or higher. If you do not have Node.js, download it from <a href="https://nodejs.org" target="_blank">nodejs.org</a> first. Once installed, open your terminal and run <code>claude</code> to start a session.</div></div>
+        </div>
+        <div class="gs-step">
+          <div class="gs-num">3</div>
+          <div><div class="gs-title">Create your first project folder</div>
+          <div class="gs-body">Create a folder for your first project:<br><br>
+          <code>mkdir my-pm-workspace && cd my-pm-workspace</code><br><br>
+          Then run <code>claude</code> inside it. This folder is where your CLAUDE.md, project files, and skills will live. One folder per project is the right mental model.</div></div>
+        </div>
+        <div class="gs-step">
+          <div class="gs-num">4</div>
+          <div><div class="gs-title">Run your first prompt</div>
+          <div class="gs-body">Type anything to verify it is working. A good first prompt:<br><br>
+          <code>What can you do in this session? What files can you see?</code><br><br>
+          Claude will describe its capabilities and list any files it can read in your current directory. If it responds, you are ready for lesson 1.</div></div>
+        </div>
+      </div>
+
+      <div class="section"><div class="section-label">What Claude Code costs</div>
+        <div class="gs-step" style="border-left:3px solid var(--blue);border-radius:0 10px 10px 0">
+          <div style="font-size:20px;padding-top:2px">💳</div>
+          <div><div class="gs-title">Claude Pro — $20/month</div>
+          <div class="gs-body">Covers personal use of Claude Code. Good for running this course and building your own workflows. Usage is metered — heavy sessions (long research tasks, large file analysis) consume more tokens. Most PMs doing typical PM work will not hit limits in a normal workday.<br><br>
+          <strong>Claude for Teams — $30/user/month</strong> — if your company wants to roll this out to multiple PMs, this is the right plan. It adds admin controls and usage visibility.</div></div>
+        </div>
+      </div>
+
+      <div class="section"><div class="section-label">What not to paste into Claude Code</div>
+        <div class="warning-box">
+          <div class="warning-label">Data hygiene — read this before lesson 1</div>
+          <div class="warning-body">Claude Code sends your prompts and pasted content to Anthropic's servers. Before using it for real work, know what your company's AI usage policy says. When in doubt, follow these rules:<br><br></div>
+          <ul class="safe-list">
+            <li>Customer PII — names, emails, account numbers, anything personally identifiable</li>
+            <li>Unreleased product details under NDA</li>
+            <li>Internal financial data not cleared for AI tools</li>
+            <li>Credentials, API keys, passwords of any kind</li>
+            <li class="ok">Anonymized research transcripts — fine</li>
+            <li class="ok">Your own notes and meeting summaries — fine</li>
+            <li class="ok">Public competitor information — fine</li>
+            <li class="ok">Code from public repositories — fine</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section"><div class="section-label">A note on AI judgment</div>
+        <div class="warning-box" style="background:var(--blue-light);border-color:var(--blue-mid);border-left-color:var(--blue)">
+          <div class="warning-label" style="color:var(--blue)">Use Claude as a thinking partner, not an authority</div>
+          <div class="warning-body" style="color:var(--blue-dark)">Claude is good at synthesis, structure, and first drafts. It is not always right. It can sound confident when it is wrong. It does not know your company, your users, or your constraints the way you do.<br><br>
+          The PM's job is judgment. Claude accelerates the work that sits underneath judgment — research, synthesis, drafting, analysis. The decisions are still yours.</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="openLesson('p1l1')" style="padding:12px 28px;font-size:14px">Ready — start lesson 1 →</button>
+    </div>`;
+  renderSidebar();
+}
+
+function showPromptLibrary(){
+  currentView='prompts'; currentLesson=null;
+  setNavActive('nl-prompts');
+  document.getElementById('main-view').innerHTML=`
+    ${topbar(`<span onclick="showHome()" style="cursor:pointer">Home</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Prompt library</span>`)}
+    <div class="pl-wrap">
+      <h1>Prompt library</h1>
+      <p class="lesson-subtitle" style="margin-left:16px">${promptLibrary.reduce((s,g)=>s+g.items.length,0)} prompts organized by task. Copy any prompt directly into Claude Code.</p>
+      <input class="pl-search" type="text" placeholder="Search prompts..." oninput="filterPrompts(this.value)" id="pl-search">
+      <div class="pl-filters" id="pl-filters">
+        <div class="pl-filter active" onclick="filterCategory(this,'All')">All</div>
+        ${promptLibrary.map(g=>`<div class="pl-filter" onclick="filterCategory(this,'${g.cat}')">${g.cat}</div>`).join('')}
+      </div>
+      <div id="pl-content">
+        ${promptLibrary.map(g=>`
+          <div class="pl-group" data-cat="${g.cat}">
+            <div class="pl-group-title">${g.cat}</div>
+            ${g.items.map(item=>`
+              <div class="pl-card" data-title="${item.title.toLowerCase()}" data-prompt="${item.prompt.toLowerCase()}">
+                <div class="pl-card-text">
+                  <div class="pl-card-title">${item.title}</div>
+                  <div class="pl-card-preview">${item.prompt.slice(0,90)}...</div>
+                </div>
+                <button class="pl-copy" onclick="copyPlPrompt(this,\`${item.prompt.replace(/`/g,'\\`')}\`)">COPY</button>
+              </div>`).join('')}
+          </div>`).join('')}
+      </div>
+    </div>`;
+  renderSidebar();
+}
+
+function filterCategory(el, cat){
+  document.querySelectorAll('.pl-filter').forEach(f=>f.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.pl-group').forEach(g=>{
+    g.style.display=(cat==='All'||g.dataset.cat===cat)?'block':'none';
+  });
+}
+
+function filterPrompts(q){
+  const lq=q.toLowerCase();
+  document.querySelectorAll('.pl-card').forEach(c=>{
+    const match=c.dataset.title.includes(lq)||c.dataset.prompt.includes(lq);
+    c.style.display=match?'flex':'none';
+  });
+  document.querySelectorAll('.pl-group').forEach(g=>{
+    const visible=[...g.querySelectorAll('.pl-card')].some(c=>c.style.display!=='none');
+    g.style.display=visible?'block':'none';
+  });
+}
+
+function copyPlPrompt(btn,text){
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='COPIED';
+    setTimeout(()=>btn.textContent='COPY',1500);
+  });
+}
+
+function diffBadge(d){
+  if(d==='easy') return '<span class="badge badge-easy">Beginner</span>';
+  if(d==='medium') return '<span class="badge badge-medium">Intermediate</span>';
+  return '<span class="badge badge-advanced">Advanced</span>';
+}
+
+function openLesson(id){
+  const part=curriculum.find(p=>p.lessons.some(l=>l.id===id));
+  const lesson=part.lessons.find(l=>l.id===id);
+  currentView='lesson'; currentLesson=lesson;
+  setNavActive('');
+  const all=curriculum.flatMap(p=>p.lessons);
+  const gi=all.indexOf(lesson);
+  const prev=all[gi-1], next=all[gi+1];
+  const done=completed.includes(id);
+
+  document.getElementById('main-view').innerHTML=`
+    ${topbar(
+      `<span onclick="showHome()" style="cursor:pointer">Home</span><span class="breadcrumb-sep">›</span><span>${part.num}: ${part.title}</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">${lesson.num}</span>`,
+      `${prev?`<button class="btn btn-ghost" onclick="openLesson('${prev.id}')">← Prev</button>`:''}${next?`<button class="btn btn-ghost" onclick="openLesson('${next.id}')">Next →</button>`:''}`
+    )}
+    <div class="content-wrap">
+      <div class="lesson-meta">
+        <span class="lesson-tag">${part.num}: ${part.title}</span>
+        <span class="lesson-num-tag">Lesson ${lesson.num}</span>
+        <div class="lesson-badges">
+          <span class="badge badge-time">⏱ ${lesson.time}</span>
+          ${diffBadge(lesson.difficulty)}
+          ${done?'<span style="font-size:11px;color:var(--green);font-family:IBM Plex Mono,monospace;font-weight:600;">✓ Complete</span>':''}
+        </div>
+      </div>
+
+      <h1>${lesson.title}</h1>
+      <p class="lesson-subtitle">${lesson.subtitle}</p>
+
+      <div class="section">
+        <div class="section-label">Key concepts</div>
+        <div class="concept-grid">
+          ${lesson.concepts.map(c=>`<div class="concept-card"><div class="concept-name">${c.name}</div><p class="concept-desc">${c.desc}</p></div>`).join('')}
+        </div>
+      </div>
+
+      ${lessonExamples[lesson.id]?`
+      <div class="section">
+        <div class="section-label">Before and after</div>
+        <div class="example-box">
+          <div class="example-cols">
+            <div class="example-side before">
+              <div class="example-side-label">Before</div>
+              <div class="example-content">${lessonExamples[lesson.id].before.replace(/\\n/g,'\n')}</div>
+            </div>
+            <div class="example-side after">
+              <div class="example-side-label">After</div>
+              <div class="example-content">${lessonExamples[lesson.id].after.replace(/\\n/g,'\n')}</div>
+            </div>
+          </div>
+        </div>
+      </div>`:''}
+
+      <div class="section">
+        <div class="section-label">Exercise</div>
+        <div class="exercise-box">
+          <div class="exercise-label">Your mission</div>
+          <p class="exercise-text">${lesson.exercise}</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Starter prompts</div>
+        ${lesson.prompts.map(p=>`<div class="prompt-block">${p}<button class="copy-btn" onclick="copyPrompt(this,\`${p.replace(/`/g,'\\`')}\`)">COPY</button></div>`).join('')}
+      </div>
+
+      <div class="section">
+        <div class="section-label">Artifact you will produce</div>
+        <div class="artifact-box">
+          <div class="artifact-icon">📄</div>
+          <div>
+            <div class="artifact-label">Take-away</div>
+            <p class="artifact-name">${lesson.artifact}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Check your understanding</div>
+        <div class="quiz-section" id="quiz-${id}">
+          <div class="quiz-q">${lesson.quiz.q}</div>
+          <div class="quiz-options">
+            ${lesson.quiz.opts.map((o,i)=>`<div class="quiz-opt" onclick="answerQuiz('${id}',${i},${lesson.quiz.correct},\`${lesson.quiz.explain.replace(/`/g,'\\`')}\`)">${o}</div>`).join('')}
+          </div>
+          <div class="quiz-feedback" id="qf-${id}"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="complete-bar">
+      <span class="complete-hint">${done?'✓ Lesson complete — nice work.':'Finish the exercise, then mark this lesson done.'}</span>
+      <button class="btn btn-primary" onclick="markDone('${id}');this.textContent='✓ Complete';this.style.background='var(--green)';" ${done?'disabled style="background:var(--green);cursor:default;"':''}>
+        ${done?'✓ Complete':'Mark complete →'}
+      </button>
+    </div>`;
+
+  renderSidebar();
+  window.scrollTo(0,0);
+}
+
+function answerQuiz(id,chosen,correct,explain){
+  const c=document.getElementById(`quiz-${id}`);
+  const opts=c.querySelectorAll('.quiz-opt');
+  const fb=document.getElementById(`qf-${id}`);
+  opts.forEach((o,i)=>{
+    o.style.pointerEvents='none';
+    if(i===correct) o.classList.add('correct');
+    else if(i===chosen&&chosen!==correct) o.classList.add('wrong');
+  });
+  fb.textContent=(chosen===correct?'✓ Correct. ':'✗ Not quite. ')+explain;
+  fb.className='quiz-feedback '+(chosen===correct?'ok':'err');
+}
+
+function copyPrompt(btn,text){
+  navigator.clipboard.writeText(text).then(()=>{btn.textContent='COPIED';setTimeout(()=>btn.textContent='COPY',1500);});
+}
+
+showHome();
+</script>
+</body>
+</html>
