@@ -320,9 +320,9 @@ const curriculum = [
           {name:'Actions vs. Answers',desc:'Claude can do things, not just respond to questions'},
           {name:'CC vs Claude.ai',desc:'When to use each and why CC is built for PM work'}
         ],
-        exercise:'Open Claude Code in your terminal. Drop in a messy set of notes from your last planning meeting. Ask Claude to organize them into a PRD skeleton with sections for Problem, Goals, Non-Goals, and Success Metrics.',
-        prompts:['Here are my raw notes from our planning meeting. Please organize these into a PRD skeleton with sections: Problem Statement, Goals, Non-Goals, Success Metrics, and Open Questions. Preserve the original intent but clean up the language.\n\n[paste your notes here]'],
-        artifact:'Your first Claude Code-generated PRD skeleton',
+        exercise:'Open Claude Code in your terminal. Drop in a messy Slack thread or set of notes from a recent product discussion. Ask Claude to organize them into a PRD skeleton with sections for Problem, Goals, Non-Goals, and Success Metrics.',
+        prompts:['/powerup — a built-in Claude Code command that teaches features through interactive animated lessons. Run it any time you want to discover what Claude Code can do.','Here are my raw notes from our planning meeting. Please organize these into a PRD skeleton with sections: Problem Statement, Goals, Non-Goals, Success Metrics, and Open Questions. Preserve the original intent but clean up the language.\n\n[paste your notes here]'],
+        artifact:'Your first Claude Code-generated PRD skeleton — built from a messy Slack thread in under 2 minutes. This is the before and after that makes the tool click.',
         quiz:{q:'What is the key difference between Claude.ai and Claude Code?',opts:['Claude Code is faster','Claude Code can take actions and use tools, not just answer questions','Claude Code has a bigger context window','Claude Code is only for engineers'],correct:1,explain:'Claude Code is built for taking action — it can read files, run code, connect to tools, and take multi-step actions. Claude.ai is primarily a chat interface.'}
       },
       {id:'p1l2',num:'1.2',time:'30 min',difficulty:'easy',
@@ -341,7 +341,7 @@ const curriculum = [
       },
       {id:'p1l3',num:'1.3',time:'25 min',difficulty:'easy',
         title:'Persistent Memory Across Sessions',
-        subtitle:'Set up CLAUDE.md so Claude always knows your project the moment you open a session.',
+        subtitle:'Set up CLAUDE.md so Claude always knows your project the moment you open a session. This is context engineering — designing what the model sees, not just how you prompt it.',
         concepts:[
           {name:'CLAUDE.md',desc:'A file Claude reads automatically at the start of every session'},
           {name:'Project Memory',desc:'Persistent facts about your project Claude retains'},
@@ -349,7 +349,7 @@ const curriculum = [
           {name:'Living Document',desc:'CLAUDE.md should evolve as your project does'}
         ],
         exercise:'Create a CLAUDE.md file for a real project you work on. Include: project name, your role, the top 3 user segments, current phase, and the 2 most important open decisions. Start a new session and verify Claude reads it.',
-        prompts:['I want to create a CLAUDE.md file for my project. Ask me 5 questions to understand what to include, then generate the file in proper markdown format.'],
+        prompts:['Context engineering tip: put your most important context — strategy, constraints, and current priorities — at the top and bottom of your CLAUDE.md file, not buried in the middle. Studies show model reasoning degrades 30%+ on information in the middle of long prompts.','I want to create a CLAUDE.md file for my project. Ask me 5 questions to understand what to include, then generate the file in proper markdown format.'],
         artifact:'A CLAUDE.md file that primes every future session',
         quiz:{q:'Where does Claude Code look for CLAUDE.md by default?',opts:['Your home directory','A special Claude server','The root of your current working directory','Wherever you tell it each session'],correct:2,explain:'Claude Code reads CLAUDE.md from the root of the directory you open it in. One CLAUDE.md per project folder.'}
       },
@@ -793,8 +793,8 @@ const curriculum = [
           {name:'Signal vs. Noise',desc:'How to tune the threshold so the agent surfaces what matters without alerting on every fluctuation'}
         ],
         exercise:'Pick 3 metrics you check manually right now. Define the baseline and anomaly threshold for each. Build a metric pulse agent that queries all three daily, compares to baseline, and delivers a digest to Slack. Tune it until the first week of digests contains only signal worth acting on.',
-        prompts:['§AGENT§I want to build a daily metric pulse agent. My 3 metrics are: (1) [metric, baseline, threshold], (2) [metric, baseline, threshold], (3) [metric, baseline, threshold]. Data source: [warehouse/schema]. Please: (1) write the SQL for each metric, (2) write the baseline comparison logic, (3) design the schedule and trigger, (4) write the Slack message format — one line per metric, normal or flagged, (5) define what the agent does when it cannot reach the data source.','§AGENT§When a metric crosses the threshold I want the agent to automatically run a metric tree decomposition and generate 2 ranked hypotheses. Add that logic so the alert arrives with analysis attached, not just a number.'],
-        artifact:'A running daily metric pulse agent delivering a Slack digest every morning',
+        prompts:['Once you have built this agent, wrap it in a Claude Code Routine to make it run automatically on Anthropic\'s cloud — no terminal required. Configure a prompt, repo, and connectors once, then set a nightly schedule. Pro plan: 5 runs per day. Max: 15. Team and Enterprise: 25. Run /routines in Claude Code to get started.','§AGENT§I want to build a daily metric pulse agent. My 3 metrics are: (1) [metric, baseline, threshold], (2) [metric, baseline, threshold], (3) [metric, baseline, threshold]. Data source: [warehouse/schema]. Please: (1) write the SQL for each metric, (2) write the baseline comparison logic, (3) design the schedule and trigger, (4) write the Slack message format — one line per metric, normal or flagged, (5) define what the agent does when it cannot reach the data source.','§AGENT§When a metric crosses the threshold I want the agent to automatically run a metric tree decomposition and generate 2 ranked hypotheses. Add that logic so the alert arrives with analysis attached, not just a number.'],
+        artifact:'A running daily metric pulse agent delivering a Slack digest every morning — then wrap it in a Claude Code Routine to run it nightly on Anthropic\'s cloud without keeping your terminal open',
         quiz:{q:'What does it mean when your metric pulse agent stays silent for a week?',opts:['The agent is broken','The thresholds are too loose','Nothing moved outside normal range — silence is the signal that things are stable','You need more metrics'],correct:2,explain:'A well-tuned agent that stays silent is doing its job. If you get alerts every day your thresholds are too tight. If you never get alerts, verify the agent is actually running.'}
       },
       {id:'p8l2',num:'8.2',time:'55 min',difficulty:'advanced',
@@ -997,6 +997,29 @@ function showReleaseNotes(){
         </div></div>
       </div>
 
+      <div class="section"><div class="section-label">May 2026 — v1.1 Cohort Week Update</div>
+        <div class="gs-step">
+          <div class="gs-num" style="background:#1A56DB;color:#fff">🔄</div>
+          <div><div class="gs-title">Course updated for the Product School cohort launch</div>
+          <div class="gs-body">Updated Getting Started with an OpenClaw warning (install directly from Anthropic), auto mode explainer for Team plan users, Windows PowerShell note (Git Bash no longer required), and Cowork updated to GA status with Dispatch added to the comparison.</div>
+        </div></div>
+        <div class="gs-step">
+          <div class="gs-num">P1</div>
+          <div><div class="gs-title">P1L1 — /powerup command added</div>
+          <div class="gs-body">New prompt in P1L1 introducing the built-in /powerup command — interactive animated lessons that teach Claude Code features from inside the tool.</div>
+        </div></div>
+        <div class="gs-step">
+          <div class="gs-num">P1</div>
+          <div><div class="gs-title">P1L3 — Context engineering framing + lost-in-middle tip</div>
+          <div class="gs-body">P1L3 (CLAUDE.md) now uses the term context engineering in its subtitle and prompts. Added an actionable tip: put your most important context at the top and bottom of your CLAUDE.md — studies show 30%+ reasoning degradation for content buried in the middle.</div>
+        </div></div>
+        <div class="gs-step">
+          <div class="gs-num">P8</div>
+          <div><div class="gs-title">P8L1 — Claude Code Routines added as graduate path</div>
+          <div class="gs-body">P8L1 (metric pulse agent) now includes Claude Code Routines as the next step after building an agent — configure once, run on a schedule on Anthropic\'s cloud without keeping your terminal open. Pro: 5 runs/day, Max: 15, Team/Enterprise: 25.</div>
+        </div></div>
+      </div>
+
       <div class="section"><div class="section-label">Coming next</div>
         <div class="gs-step">
           <div style="font-size:18px;padding-top:2px">🔜</div>
@@ -1108,12 +1131,12 @@ function showGettingStarted(){
         <div class="gs-step" style="border-left:3px solid #1D9E75;border-radius:0 10px 10px 0;margin-bottom:12px">
           <div style="font-size:18px;padding-top:2px">💡</div>
           <div><div class="gs-title">Which tool does this course use?</div>
-          <div class="gs-body">This course is built around Claude Code — the terminal-based tool for developers and technical PMs. If your team uses Claude Cowork (Anthropic's desktop tool for non-developers), here is what you need to know.</div>
+          <div class="gs-body">This course is built around Claude Code — the terminal-based tool for developers and technical PMs. Claude Cowork is Anthropic's desktop tool for non-developers and is now generally available on macOS and Windows. If your team uses Cowork, here is what you need to know.</div>
         </div></div>
         <div class="gs-step">
           <div style="font-size:18px;padding-top:2px">✅</div>
           <div><div class="gs-title">Works in both Claude Code and Cowork</div>
-          <div class="gs-body">Most of the course translates directly. Research synthesis (P2), prototyping (P3), writing docs (P6), status updates, decision briefs, prompt rigor — these are all prompt-based workflows that work in either tool. Roughly 60% of the course applies to Cowork users as-is.</div>
+          <div class="gs-body">Most of the course translates directly. Research synthesis (P2), prototyping (P3), writing docs (P6), status updates, decision briefs, prompt rigor — these are all prompt-based workflows that work in either tool. Roughly 60% of the course applies to Cowork users as-is. Cowork also has a unique feature called Dispatch — assign tasks from your phone and Claude completes them on your desktop while you are away.</div>
         </div></div>
         <div class="gs-step">
           <div style="font-size:18px;padding-top:2px">⚙️</div>
@@ -1127,11 +1150,20 @@ function showGettingStarted(){
         </div></div>
       </div>
 
+      <div class="section"><div class="section-label">Important — Install directly from Anthropic</div>
+        <div class="gs-step" style="border-left:3px solid #DC2626;border-radius:0 10px 10px 0;margin-bottom:12px">
+          <div style="font-size:18px;padding-top:2px">🚨</div>
+          <div><div class="gs-title" style="color:#DC2626">Do not use third-party harnesses</div>
+          <div class="gs-body">As of April 2026, Anthropic no longer allows Claude subscriptions to power third-party wrappers like OpenClaw. If you installed Claude Code through a third-party tool, you will be billed separately and may lose access mid-session. Install Claude Code directly from Anthropic using the steps below — not from any third-party source.</div>
+        </div></div>
+      </div>
+
       <div class="section"><div class="section-label">Setting up your Mac</div>
         <div class="gs-step" style="border-left:3px solid var(--blue);border-radius:0 10px 10px 0;margin-bottom:12px">
           <div style="font-size:18px;padding-top:2px">⚠️</div>
           <div><div class="gs-title">Do this before installing Claude Code</div>
           <div class="gs-body">If your Mac has never been used for development you will hit dependency errors — old Python, npm permission failures, missing tools. Follow these steps in order and you will avoid all of them.</div>
+          <div class="gs-body" style="margin-top:8px"><strong>Windows users:</strong> Git for Windows and Git Bash are no longer required. Claude Code now falls back to PowerShell automatically. Skip any instructions telling you to install Git Bash first — install Node.js and then Claude Code directly.</div>
         </div></div>
         <div class="gs-step">
           <div class="gs-num">1</div>
@@ -1163,6 +1195,14 @@ function showGettingStarted(){
         </div></div>
         <div class="gs-step">
           <div class="gs-num">5</div>
+          <div><div class="gs-title">About auto mode</div>
+          <div class="gs-body">Claude Code has a feature called auto mode that handles permission prompts automatically using a safety classifier. If you are on the Team plan you may see it during setup.<br><br>
+          <strong>When to turn it on:</strong> isolated project environments, long sessions where you do not want to approve every file operation.<br><br>
+          <strong>When to leave it off:</strong> anything touching production data, shared systems, or external APIs you do not control.<br><br>
+          Enable or disable it with: <code>claude config set autoMode true</code> or <code>false</code></div>
+        </div></div>
+        <div class="gs-step">
+          <div class="gs-num">6</div>
           <div><div class="gs-title">If you still hit errors</div>
           <div class="gs-body">Paste the exact error message into Claude and ask it to help you fix it. Include your Mac OS version (<code>sw_vers</code>) and what you ran. Claude is good at diagnosing setup issues — use it.</div>
         </div></div>
