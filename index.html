@@ -302,6 +302,23 @@ h1::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;back
 </div>
 
 <script>
+
+function switchOsTab(os){
+  var mac = document.getElementById('os-mac');
+  var win = document.getElementById('os-win');
+  var macBtn = document.getElementById('tab-mac');
+  var winBtn = document.getElementById('tab-win');
+  if(!mac || !win) return;
+  mac.style.display = os==='mac' ? 'block' : 'none';
+  win.style.display = os==='win' ? 'block' : 'none';
+  if(os==='mac'){
+    macBtn.style.background='var(--blue)'; macBtn.style.color='#fff'; macBtn.style.borderColor='var(--blue)';
+    winBtn.style.background='var(--white)'; winBtn.style.color='var(--text-mid)'; winBtn.style.borderColor='var(--border)';
+  } else {
+    winBtn.style.background='var(--blue)'; winBtn.style.color='#fff'; winBtn.style.borderColor='var(--blue)';
+    macBtn.style.background='var(--white)'; macBtn.style.color='var(--text-mid)'; macBtn.style.borderColor='var(--border)';
+  }
+}
 // Claude Code for PMs — © 2026 Faran Najam. Free to learn from, not to republish or sell.
 // First published: March 2026. Contact: contact via LinkedIn
 const lessonExamples = {"p1l1": {"before": "Meeting notes from yesterday: john said something about latency, need to talk to design re the empty state, users confused follow up, Q3 goal still tbd, sarah has concerns", "after": "Problem Statement\\nUsers experiencing latency issues and confusion around empty states, impacting adoption.\\n\\nGoals\\n- Resolve latency concerns raised in eng sync\\n- Align with design on empty state treatment\\n\\nOpen Questions\\n- What is the Q3 adoption goal?\\n- What are Sarah concerns specifically?"}, "p2l1": {"before": "50+ interviews completed with a specific user segment. Notes scattered across a dozen docs. You went in expecting UX complaints. Instead you keep hearing something structural: this segment uses the product differently from everyone else. You do not know yet what that means for the product.", "after": "Theme: This segment has a fundamentally different job to be done\\nFrequency: High — consistent across interviews\\nKey insight: This segment is not using the product for themselves — they are using it on behalf of others. The current flow was never designed for that.\\nSo what: One user intent does not fit all. Product direction changed: we built a dedicated flow for this segment rather than continuing to optimize a universal experience that did not fit their context."}, "p2l2": {"before": "You have internal feedback — NPS, support tickets, survey responses. It takes weeks to synthesize and by the time it is ready the team has already moved on to the next sprint. You suspect there is a faster signal somewhere.", "after": "After layering public community feedback alongside internal NPS and support data:\\nTop theme: Users attributed friction to one part of the product — but the pattern across sources showed the real issue was at the handoff between systems, not in any single team ownership area\\nPattern: Users could not tell what broke or where to go for help\\nSo what: The internal data was showing symptoms. The public data showed the cause. Combining both gave a clearer picture faster than either alone."}, "p2l3": {"before": "Three competitors you need to brief leadership on. You have tabs open from three different months, notes in two different docs, and a vague memory that one of them just changed their pricing model.", "after": "Competitor matrix: three players in the same space\\nFor each: core features, pricing model, target customer, recent changes\\nGap identified: None of them communicate system status to end users during failures — they all fail silently\\nTime: 25 minutes to build, ready for the leadership meeting"}, "p2l4": {"before": "You have synthesized the interviews for this segment and a clear pattern has emerged: this segment uses the product in a way the current flow does not support. That changes what needs to be built. But the platform mandate is to serve all segments consistently. You need a decision to go in a different direction.", "after": "Decision Brief: Dedicated flow for this segment\\nSituation: This segment represents a significant portion of the user base but operate in a context the current flow was not designed for.\\nFinding: This segment fails at a materially higher rate than others. The fix requires a purpose-built flow, not a copy or instruction change.\\nOptions: (A) Build a dedicated flow (B) Add contextual guidance to the existing flow (C) Treat as out of scope\\nRecommendation: Option A. Clear segment need, measurable outcome, scoped investment.\\nResult: Shipped. Meaningful improvement in conversion and task completion rates for this segment."}, "p3l1": {"before": "You describe a feature in a meeting. Design says they will mock it up next sprint. By the time it is ready the team has moved on and the feedback is stale.", "after": "You write a precise brief: user, context, job to be done, success condition. Claude builds a working prototype in 20 minutes. You share it in Slack that afternoon. Feedback arrives before the meeting ends."}, "p3l2": {"before": "You run a usability study. Recruiting takes 2 weeks. The prototype is already out of date. The report comes back 10 days later. By then the sprint is locked.", "after": "Monday 9am: prototype v1 shared with 3 users. Feedback captured in structured notes. Claude updates the prototype and synthesizes patterns by noon. Monday 2pm: prototype v2 tested with 3 more users. Two rounds of learning in one day. Hypothesis formed by end of day."}, "p3l3": {"before": "Three rounds of testing done. Lots of notes. Team meeting tomorrow. You are not sure what you learned or what to build. The meeting becomes a debate about opinions rather than a review of evidence.", "after": "Three rounds synthesized: the core flow is validated, one interaction pattern consistently confused users, one assumption was wrong. Hypothesis formed: changing the information hierarchy at step 2 will reduce drop-off. Spec written from the prototype, not from scratch. Eng picks it up with context already baked in."}, "p3l4": {"before": "Sprint planning. PM describes a feature verbally. Design needs a week to mock it up. Eng estimates based on the verbal description. Three weeks later the first working version looks nothing like what anyone imagined.", "after": "PM brings a working prototype to sprint planning. Design reacts to interaction patterns, not a description of them. Eng sees the intended behavior before writing a line of code. Estimate is grounded in something real. First production version is much closer to the intent. Revision cycle shrinks."}, "p4l1": {"before": "Engineer: the issue is in the OAuth token refresh handler in the auth middleware.\\nYou: got it. (You have no idea what that means or where to look.)", "after": "You: I looked at /src/auth/middleware.js — it looks like the token refresh only runs on page load, not on API calls. Is that what is causing the session drops?\\nEngineer: Exactly. You got it."}, "p4l2": {"before": "You are a platform PM. Your eng team builds capabilities that three different offering teams depend on. Each offering team has their own PM who also wants status. Your tech lead is fielding questions from four directions and producing for none of them.", "after": "You own the communication layer. One async update per week, written clearly enough that all three offering teams get what they need without going directly to eng. Tech lead gets one decision per sprint pre-framed with options and your recommendation. Eng velocity increases. Your tech lead stops fielding the same question from three different Slack threads."}, "p4l3": {"before": "You are standardizing the connection UX across three products that have drifted apart over years. Design shows you three sets of comps. You have opinions based on instinct, not the user research you just finished.", "after": "Feedback structured before the design review:\\nWhat research supports: This segment needs to see status information earlier in the flow — the comp addresses that well\\nSpecific concern: The error state uses red text only. 15% of users are colorblind and this is a high-stakes surface. Can we add an icon?\\nSigning off on: The overall flow sequence and the reconnect pattern\\nNot signing off yet: Error states across all three surfaces until we align on an accessibility standard\\nThe designer had something concrete to act on. Review took 25 minutes instead of 90."}, "p4l4": {"before": "PM clicks through the happy path. Looks good. Ships. Three hours later a support ticket: what happens if I upload a file with a comma in the filename? Nobody thought of that.", "after": "Claude generates 23 edge cases from the spec. PM tests 10 of them. Finds 2 bugs. They are fixed before launch. Support ticket never arrives."}, "p5l1": {"before": "You need to answer a product question that requires joining three data tables. You have not written SQL in years. Asking the data team means a 3-day wait and you need this before tomorrow.", "after": "You describe the question to Claude in plain English. It writes the query, you run it, and in 15 minutes you have the answer: a small segment of your traffic is dramatically underperforming the rest. The problem is not product quality — it is routing and distribution. That single query changed the roadmap priority."}, "p5l2": {"before": "A top-line success metric that has held steady for years. Leadership is confident. But when a team ships something, they cannot tell if the metric moved because of their work or despite it. The signal is real — the resolution is not.", "after": "Metric tree built underneath the top-line rate. Decomposed into the independent forces that drive it: coverage, flow completion by segment, lifecycle health, and session behavior. The top-line stays as the north star. Underneath it: faster, more specific indicators — each tied to a lever a team can actually pull. Now when something ships, the team can see which component moved and whether it held. The top-line metric got more meaningful, not replaced."}, "p5l3": {"before": "You have done the decomposition. You know which operating metrics explain the top-line. But getting three separate teams to adopt a shared measurement framework is not a small ask — and showing up with a deck of new metrics is not a recommendation anyone can act on.", "after": "Memo: Introduce operating metrics to give our top-line more signal and more levers.\\nRecommendation: Adopt a small set of leading indicators alongside the top-line — each one explains a different driver of it.\\nStrongest objection: We already have a metric. Why add more?\\nResponse: The top-line tells us where we are. The operating metrics tell us why we are there and what to do next. They make the existing metric more powerful, not redundant.\\nConfidence: High. Early cuts show the new indicators already explain recent movements in the top-line.\\nDecision needed: Before planning so teams can set roadmaps against the right levers."}, "p5l4": {"before": "Your team runs 1-2 experiments per month. Half do not reach significance before someone calls the result. The other half get shipped on instinct. You are rolling out a new experimentation platform and need teams to actually trust what it tells them.", "after": "First experiment on the new platform: Apple Pay and Google Wallet integration at checkout. Sample size calculated upfront. Runtime committed before launch. Result: +8% conversion, statistically significant. Shipped with confidence.\\nSix months later: 6+ experiments running per month across 25 product teams. The shift was not the tool — it was designing the test before running it. Once teams committed to a sample size in advance, they stopped calling results early."}, "p6l1": {"before": "You need a PRD for a platform capability that touches multiple systems, multiple teams, and multiple user segments. The standard feature template has none of the right sections. You spend two hours on structure before writing a word of substance.", "after": "> Run PRD skill for [platform capability]\\n\\n[Claude reads your CLAUDE.md, understands the platform context and user segments. Generates a PRD with sections that fit a platform capability: problem framing, affected surfaces, success metrics by segment, rollout sequence, open questions by team. You start with substance, not structure.]"}, "p6l2": {"before": "You send a doc proposing a new operating metrics framework to sit alongside the top-line connection rate. The argument feels solid. Then in the review the VP of Engineering asks: if we add three new metrics, how do we stop teams from optimizing for the easy one and ignoring the hard ones? You did not have an answer ready.", "after": "Before sending: you run the doc through Claude as your VP of Engineering. It surfaces the gaming concern immediately. You add a section on how the metrics relate — they are components of the top-line, not independent targets, so optimizing one at the expense of another shows up in the composite. You run it as an offering team PM whose roadmap is already locked. Their objection: my team cannot absorb new measurement overhead mid-quarter. You add a phased adoption appendix. The actual review takes 20 minutes. Both objections come up. Both are already answered."}, "p6l3": {"before": "You are mid-platform migration. Signal is scattered — adoption in one dashboard, escalations in another, eng velocity in Jira, churn risk in Salesforce. Leadership wants a weekly update and you are starting from four different tools.", "after": "Raw input pasted Friday at 4pm: adoption numbers, this week escalations, two accounts flagged as at-risk, three capabilities shipped.\\nOutput 90 seconds later:\\nShipped: Core capability now live across all surfaces\\nIn Progress: Top migration milestones on track for next week\\nBlockers: Two accounts flagged at-risk — need outreach before Thursday\\nNext Week: Targeting next adoption milestone\\nLeadership read it in 3 minutes. One action item. Weekend intact."}, "p6l4": {"before": "12-slide deck. Slide 3: a chart with 8 lines and no title. Slide 7: a table with 40 rows. The audience reads the slides. You are not needed.", "after": "8-slide deck. Every slide has one point. The chart has one line highlighted. The table has 3 rows. The audience listens to you. You are the story."}, "p7l1": {"before": "Four projects. Each in a different folder with different naming. Some have CLAUDE.md, some do not. Skills scattered across the desktop. New session means starting from scratch.", "after": "One workspace. Every project has a CLAUDE.md. Skills live in /skills. Three commands, and Claude knows your entire context for the day."}, "p7l2": {"before": "Sprint planning prep: pull tickets from Jira, copy into Notion, write context for each, estimate effort, share with team. 2 hours every other week.", "after": "> Run sprint-prep workflow\\n\\n[Claude pulls tickets, adds context from strategy.md, estimates effort, formats for Notion]\\nTime: 8 minutes."}, "p7l3": {"before": "You run the same research synthesis every Monday, the same competitive check every quarter, the same status update every Friday. Each one takes 20-30 minutes. You do them manually because that is how the workflow was built.", "after": "Monday 8am: feedback digest waiting in Slack. Competitive changes digest waiting in your inbox. Friday 4pm: status update draft saved to your workspace, ready for your review. You did not trigger any of it. You just reviewed, adjusted where needed, and sent. 90 minutes of weekly manual work converted to 10 minutes of review."}, "p7l4": {"before": "You tell your team about Claude Code in a meeting. They nod. Two weeks later nobody has set it up. The idea dies.", "after": "You run a 15-minute demo on a problem your teammate is currently stuck on. They see it solve something real. They set it up that afternoon."}, "p8l1": {"before": "Every morning you open three dashboards, check the same metrics, compare to last week in your head, decide whether anything is worth investigating. 15 minutes every day, 5 days a week. Most days nothing has changed.", "after": "8am: Slack message from your pulse agent. Two metrics normal. One flagged — conversion dropped 12% vs 7-day average, outside the 8% threshold you set. Hypothesis attached: likely the auth change deployed yesterday. You investigate. The rest of your morning is uninterrupted."}, "p8l2": {"before": "Friday 4pm. You need to send a weekly update. You open four tabs — data warehouse, Jira, NPS dashboard, last week email. You spend 45 minutes assembling a picture of the week that everyone already mostly knows.", "after": "Friday 4pm: a Slack message appears in your team channel. Four bullets. What shipped, what moved, what to watch next week. Full report linked. You glance at it, make one edit, and leave for the weekend. The agent wrote it. You approved it."}, "p8l3": {"before": "Monday morning: someone on your team messages you — retention looks weird this week. You spend two hours pulling queries, building a metric tree, generating hypotheses, and working out which data check to run first.", "after": "Monday morning: you wake up to a Slack alert from Sunday night. Retention dropped 9% vs baseline — outside the 7% threshold. Attached: metric tree showing new user retention drove the drop, 3 ranked hypotheses, and the exact SQL to confirm the top one. You run the query. Confirmed in 4 minutes. Fix scoped before standup."}, "p8l4": {"before": "Four agents running. You think. You are not entirely sure which ones are still active, what they are watching, or whether the one that was pulling from Jira last month is still working after the API key rotated.", "after": "Agent registry: 4 agents documented, each with schedule, data sources, output location, and failure behavior. Weekly health check prompt run every Monday — all green. When the Jira token rotated, the status update agent failed loudly rather than silently, and the registry told you exactly what to fix."}, "p1l5": {"before": "Every Friday: open Claude, explain the format you want, paste notes, fix the output, repeat next week with the same setup.", "after": "> Run my weekly-status skill\\n\\n[Claude reads SKILL.md, pulls from your notes, outputs a formatted update in 20 seconds]"}, "p1l4": {"before": "You open Claude Code and type: build me a CLAUDE.md for my product. Claude writes one. It has the wrong context, wrong priorities, wrong tone. You spend 20 minutes fixing it.", "after": "Claude asks: what product is this for? Who are your users? What is the current phase? What decisions are you trying to inform? After 5 questions it summarizes the plan. You approve. The CLAUDE.md it writes needs one small tweak."}, "p1l2": {"before": "You open Claude Code and type: build me a CLAUDE.md for my product. Claude writes one. It has the wrong context, wrong priorities, wrong tone. You spend 20 minutes fixing it.", "after": "Claude asks: what product is this for? Who are your users? What is the current phase? What decisions are you trying to inform? After 5 questions it summarizes the plan. You approve. The CLAUDE.md it writes needs one small tweak."}, "p1l3": {"before": "Every session you spend the first few minutes re-explaining the same context. What the product is, who the users are, where you are in the roadmap, what the key tensions are. Claude starts fresh every time.", "after": "# my-product/CLAUDE.md\\nProduct: [your product name]\\nRole: Staff PM\\nUsers: [your primary segments]\\nCurrent phase: Q3 planning\\nKey tension: Reliability vs. feature velocity\\nOpen decisions: Versioning strategy, tiering model\\n\\n[Claude reads this at session start. You never re-explain context again.]"}};
@@ -320,7 +337,7 @@ const curriculum = [
           {name:'Actions vs. Answers',desc:'Claude can do things, not just respond to questions'},
           {name:'CC vs Claude.ai',desc:'When to use each and why CC is built for PM work'}
         ],
-        exercise:'Open Claude Code in your terminal. Drop in a messy Slack thread or set of notes from a recent product discussion. Ask Claude to organize them into a PRD skeleton with sections for Problem, Goals, Non-Goals, and Success Metrics.',
+        exercise:'Open Claude Code. Paste the Nudge Slack thread from the scenario doc — the #product-engage conversation where Marcus, Raj, Lena, and You debate the retention drop. Ask Claude to organize it into a PRD skeleton: Problem Statement, Goals, Non-Goals, and Success Metrics.',
         prompts:['/powerup — a built-in Claude Code command that teaches features through interactive animated lessons. Run it any time you want to discover what Claude Code can do.','Here are my raw notes from our planning meeting. Please organize these into a PRD skeleton with sections: Problem Statement, Goals, Non-Goals, Success Metrics, and Open Questions. Preserve the original intent but clean up the language.\n\n[paste your notes here]'],
         artifact:'Your first Claude Code-generated PRD skeleton — built from a messy Slack thread in under 2 minutes. This is the before and after that makes the tool click.',
         quiz:{q:'What is the key difference between Claude.ai and Claude Code?',opts:['Claude Code is faster','Claude Code can take actions and use tools, not just answer questions','Claude Code has a bigger context window','Claude Code is only for engineers'],correct:1,explain:'Claude Code is built for taking action — it can read files, run code, connect to tools, and take multi-step actions. Claude.ai is primarily a chat interface.'}
@@ -334,7 +351,7 @@ const curriculum = [
           {name:'95% Confidence Threshold',desc:'Claude keeps asking until it can accurately explain back what you need — not what you said, what you actually need'},
           {name:'One Question at a Time',desc:'Sequential questioning forces depth. Ten questions at once gets shallow answers. One question at a time gets the real brief'}
         ],
-        exercise:'Pick something you have been wanting to build or document — a spec, a workflow, a CLAUDE.md. Before you ask Claude to build it, run the interview prompt. Let Claude ask you questions one at a time. When it summarizes, check: did it get it right? How different is the plan from what you would have asked for if you had just said build me X?',
+        exercise:'Your project is Nudge Engage v2. Run the AI interview before building anything. Let Claude ask you one question at a time about the initiative. When it summarizes — check: did it get the 30-day retention problem right? Did it surface the tension between engagement and nudge fatigue?',
         prompts:['Before you create any files or write any code, interview me. Ask me one question at a time until you have 95% confidence you understand what I actually need — not just what I said I want. When you are confident, summarize what you have learned and wait for my approval before proceeding.','I want to build [describe roughly what you want]. Before you start, ask me questions one at a time to understand: what problem this solves, who uses it, what success looks like, and what constraints I have not mentioned yet. Stop when you can summarize the plan back to me accurately.'],
         artifact:'A Claude-generated plan summary you approved before a single file was written — and the habit of running this before every new project',
         quiz:{q:'When should Claude write the first file in a new project?',opts:['Immediately — the sooner it starts the faster you iterate','After you describe what you want','After it has interviewed you, summarized the plan, and you have approved it','After the first draft fails'],correct:2,explain:'Nothing gets built until the plan is approved. The interview surfaces what you actually need. The summary is the forcing function. Approval is the gate. Build after that — not before.'}
@@ -348,7 +365,7 @@ const curriculum = [
           {name:'Session vs. Persistent',desc:'What Claude knows in one session vs. what it knows across all of them'},
           {name:'Living Document',desc:'CLAUDE.md should evolve as your project does'}
         ],
-        exercise:'Create a CLAUDE.md file for a real project you work on. Include: project name, your role, the top 3 user segments, current phase, and the 2 most important open decisions. Start a new session and verify Claude reads it.',
+        exercise:'Build your CLAUDE.md for Nudge Engage v2. Role: PM on the Engage squad. Product: Nudge, a consumer personal finance app. Key metric: 30-day retention (37%, down from 44%). Key tension: engagement volume vs nudge fatigue. Open decision: what brings users back after week 1. Tip: put your most important context at the top and bottom of the file — model reasoning degrades 30%+ for content buried in the middle.',
         prompts:['Context engineering tip: put your most important context — strategy, constraints, and current priorities — at the top and bottom of your CLAUDE.md file, not buried in the middle. Studies show model reasoning degrades 30%+ on information in the middle of long prompts.','I want to create a CLAUDE.md file for my project. Ask me 5 questions to understand what to include, then generate the file in proper markdown format.'],
         artifact:'A CLAUDE.md file that primes every future session',
         quiz:{q:'Where does Claude Code look for CLAUDE.md by default?',opts:['Your home directory','A special Claude server','The root of your current working directory','Wherever you tell it each session'],correct:2,explain:'Claude Code reads CLAUDE.md from the root of the directory you open it in. One CLAUDE.md per project folder.'}
@@ -362,7 +379,7 @@ const curriculum = [
           {name:'change_log.md',desc:'The decision trail — what changed, when, and why'},
           {name:'Chat to Code handoff',desc:'Think in Claude.ai, execute in Claude Code, pass context via these files'}
         ],
-        exercise:'Set up all three files for a real project. Start a session in Claude.ai to think through a product decision. Then open Claude Code, point it to your files, and have it write the decision into strategy.md and log it in change_log.md.',
+        exercise:'Create project.md, strategy.md, and change_log.md for Nudge Engage v2. Your project.md: what Nudge is, your squad, current phase (discovery), key stakeholders. Your strategy.md: the hypothesis — if we make the app feel personally relevant after week 1, we recover the 7-point retention drop. Your change_log.md: log today as day 1 of discovery.',
         prompts:['I have three files: project.md, strategy.md, and change_log.md. Please read project.md first, then help me think through [decision]. When we reach a conclusion, write it into strategy.md and log the decision with reasoning in change_log.md.'],
         artifact:'A three-file project architecture you use every session from here on',
         quiz:{q:'What is the main purpose of change_log.md?',opts:['Tracking bugs','Recording what changed and why — a decision trail you can audit and reverse','Logging errors','Storing prompts'],correct:1,explain:'change_log.md is not a git log — it captures the reasoning behind decisions, not just what changed. That reasoning is what makes it useful months later.'}
@@ -396,7 +413,7 @@ const curriculum = [
           {name:'Theme Clustering',desc:'Grouping observations into patterns across multiple interviews'},
           {name:'Outlier Detection',desc:'Spotting the one-off that changes the direction'}
         ],
-        exercise:'Drop in 3 real (or anonymized) interview transcripts. Ask Claude to identify themes, extract the top quotes, and produce an insight synthesis document.',
+        exercise:'Paste the three interview excerpts from the Nudge scenario doc — Priya (power user, 18 months), Tom (churned after 5 weeks), and Amara (new user, 10 days in). Ask Claude to identify themes, extract the top 3 verbatim quotes per theme, and produce a structured insight synthesis document.',
         prompts:['Here are 3 user interview transcripts. Please: (1) identify the top 5 themes across all 3, (2) extract the 3 best verbatim quotes per theme, (3) note any contradictions or outliers, and (4) produce a structured insight synthesis document.\n\n[paste transcripts]'],
         artifact:'An insight synthesis document with themes and verbatim quotes',
         quiz:{q:'Why does verbatim quote extraction matter in research synthesis?',opts:['Quotes fill space in the doc','Direct user language is harder for stakeholders to dismiss than paraphrase','It is required by research standards','It takes less time'],correct:1,explain:'A paraphrase is your interpretation. A verbatim quote is the user\'s voice. Stakeholders push back on interpretations; they feel the weight of direct quotes differently.'}
@@ -410,7 +427,7 @@ const curriculum = [
           {name:'Priority Ranking',desc:'Scoring themes by frequency and severity together'},
           {name:'Actionable Findings',desc:'Translating patterns into specific next steps'}
         ],
-        exercise:'Gather 50+ pieces of raw feedback — NPS comments, App Store reviews, support tickets. Feed them to Claude and get back a prioritized findings report.',
+        exercise:'Paste the 10 NPS verbatims from the Nudge scenario doc. Ask Claude to identify the top themes, separate praise from complaints, and call out the most actionable signal. Check: does it surface nudge fatigue and the lack of a reason to return after week 1?',
         prompts:['Here is a set of raw customer feedback. Please: (1) extract all themes mentioned more than twice, (2) rank by frequency, (3) separate praise from complaints, (4) identify the top 3 actionable issues, (5) produce a findings report I can share with leadership.\n\n[paste feedback]','§AGENT§I want to turn this into a scheduled agent. It should run every Monday morning, pull from [source], synthesize themes, and deliver a digest to [Slack channel / email]. Design the agent workflow, write the schedule trigger, define the output format, and specify where I review before anything is shared externally.'],
         artifact:'A prioritized feedback report ready for leadership',
         quiz:{q:'What makes a finding actionable?',opts:['It is short','It points to a specific decision or change the team can make','It uses bullet points','It has data attached'],correct:1,explain:'"Users are frustrated with onboarding" is an observation. "Add a progress indicator to the 4-step setup flow" is actionable. One describes a feeling; the other describes a change.'}
@@ -424,7 +441,7 @@ const curriculum = [
           {name:'Gap Identification',desc:'Where your product has space competitors have left open'},
           {name:'Repeatability',desc:'A workflow you run fresh every quarter with one prompt'}
         ],
-        exercise:'Pick 3 real competitors. Ask Claude to research each across: features, pricing, target customer, differentiators, and recent changes. Produce a matrix and identify 2 gaps your product can own.',
+        exercise:'Research Mint, YNAB, and Monarch Money. For each: how do they keep users engaged after the initial account connection? What does their notification or summary system look like? Ask Claude to produce a competitive matrix and identify 2 gaps none of them own — that is the white space for Nudge Engage v2.',
         prompts:['Research these 3 competitors: [A], [B], [C]. For each: core features, pricing model, target customer, key differentiators, notable recent changes. Then produce a comparison matrix and identify 2 gaps none of them are owning well.','§AGENT§I want to turn this into a weekly monitoring agent. It should track [competitor A], [competitor B], [competitor C] — checking their product pages, pricing, and release notes every Monday. Deliver a changes-only digest: what is new since last week, what gaps have opened or closed. Design the agent, write the trigger, and define what counts as a meaningful change worth surfacing.'],
         artifact:'A competitive matrix with positioning gaps called out',
         quiz:{q:'What is the most useful output of competitive analysis?',opts:['Knowing their prices','Finding gaps — space competitors are not occupying that you could own','Building the longest feature list','Matching their features exactly'],correct:1,explain:'The goal is not to copy competitors — it is to find what they are all ignoring. Gaps are where strategy lives.'}
@@ -438,7 +455,7 @@ const curriculum = [
           {name:'One Page Rule',desc:'One page forces clarity; two pages invites debate'},
           {name:'Recommendation Framing',desc:'How to phrase a recommendation so it generates a decision, not a discussion'}
         ],
-        exercise:'Take outputs from lessons 2.1–2.3. Ask Claude to synthesize them into a 1-page decision brief with: situation, findings, options, and a clear recommendation.',
+        exercise:'Take your interview synthesis, feedback analysis, and competitive matrix from P2L1–P2L3. Ask Claude to synthesize them into a one-page decision brief for Marcus, Head of Product at Nudge. Recommendation: investigate the week-1 drop-off before committing to any solution scope.',
         prompts:['I have these research outputs: [paste]. Please synthesize into a 1-page decision brief: Situation (2 sentences), Key Findings (max 5 bullets), Options Considered (2-3), Recommended Action (1 sentence), Why Now. Audience: my VP of Product.'],
         artifact:'A 1-page decision brief ready to send',
         quiz:{q:'What separates a decision brief from a research report?',opts:['Length','A brief ends with a specific recommended action — a report just presents findings','Formatting','The audience'],correct:1,explain:'Research reports inform. Decision briefs drive action. The test: after reading it, does the stakeholder know exactly what you are recommending they do?'}
@@ -459,7 +476,7 @@ const curriculum = [
           {name:'Brief Iteration',desc:'When the first prototype is wrong, the brief was wrong — how to diagnose and fix it'}
         ],
         example:{before:'You describe a feature in a meeting. Design says they will mock it up next sprint. By the time it is ready the team has moved on and the feedback is stale.',after:'You write a precise brief: user, context, job to be done, what success looks like in the flow. Claude builds a working prototype in 20 minutes. You share it in Slack that afternoon. Feedback arrives before the meeting ends.'},
-        exercise:'Pick a feature you have been thinking about but have not built yet. Write a PM brief — user, context, job to be done, and success condition. Ask Claude to build a working HTML prototype from it. If the first version is wrong, diagnose whether the brief was wrong and rewrite it. Get to something worth showing a user.',
+        exercise:'Build the Nudge weekly money summary prototype. Brief: personalized screen with top spending insight (biggest week-over-week change), one contextual nudge, and savings goal progress ring. Primary user: 28-year-old who connected their Chase account 2 weeks ago and has not opened the app since. Constraint: no new data integrations. Run the AI interview first. Approve the plan. Watch it build.',
         prompts:['I want to build a working prototype. Here is my PM brief:\n\nUser: [describe who this is for and their context]\nJob to be done: [what they are trying to accomplish]\nFlow: [describe each step]\nSuccess condition: [what does good look like at the end]\nConstraints: [anything Claude should know — mobile only, simple, no login, etc]\n\nBuild an HTML prototype I can open in a browser and share with users today.'],
         artifact:'A working prototype built from a precise PM brief — and the brief itself as a reusable template',
         quiz:{q:'What most determines the quality of a Claude-generated prototype?',opts:['The complexity of the feature','The quality of the PM brief — the precision of the problem description','How much time you spend prompting','Whether you use HTML or React'],correct:1,explain:'Claude builds what you describe. Vague brief, vague prototype. The PM brief is the real skill — the prototype is just the output.'}
@@ -474,7 +491,7 @@ const curriculum = [
           {name:'Between-Session Updates',desc:'Using Claude to update the prototype between sessions so each round tests something new'}
         ],
         example:{before:'You run a usability study. Recruiting takes 2 weeks. The prototype is already out of date. The report comes back 10 days later. By then the sprint is locked.',after:'Monday 9am: prototype v1 shared with 3 users. Feedback captured in structured notes. Claude updates the prototype and synthesizes patterns by noon. Monday 2pm: prototype v2 tested with 3 more users. Two rounds of learning in one day. Hypothesis formed by end of day.'},
-        exercise:'Take the prototype from lesson 3.1. Identify 3 people you can show it to today — a teammate, a customer, anyone who represents the user. Run a 15-minute session with each. Capture structured observations. Ask Claude to synthesize patterns across the three sessions and update the prototype. Run one more round with the updated version.',
+        exercise:'Take the Nudge weekly summary prototype from P3L1. Show it to 2-3 people. Ask: what do you think this does? Would you open a push notification to see this? What would make you actually change your spending based on this? Update the prototype between sessions based on what you hear.',
         prompts:['I just ran [N] usability sessions on my prototype. Here are my structured observations from each session:\n\n[paste session notes]\n\nPlease: (1) identify the top 3 patterns across all sessions, (2) separate observations about the flow from observations about the UI, (3) flag anything users did that surprised you, (4) recommend the highest-impact change for the next prototype version, (5) update the prototype with that change.'],
         artifact:'A prototype updated across multiple test rounds and a synthesis document showing what changed and why',
         quiz:{q:'What makes rapid iterative testing different from a standard usability study?',opts:['It is less rigorous','It is faster because you skip synthesis','You update the prototype between rounds and test again — the loop closes in hours, not weeks','You need fewer participants'],correct:2,explain:'The power is in the loop. Each round informs the next. By the time you form a hypothesis you have evidence from multiple iterations, not just one session.'}
@@ -489,7 +506,7 @@ const curriculum = [
           {name:'From Prototype to Spec',desc:'What the prototype and test rounds tell eng and design before a line of production code is written'}
         ],
         example:{before:'Three rounds of testing done. Lots of notes. Team meeting tomorrow. You are not sure what you learned or what to build. The meeting becomes a debate about opinions rather than a review of evidence.',after:'Three rounds synthesized: the core flow is validated, one interaction pattern consistently confused users, one assumption was wrong. Hypothesis formed: changing the information hierarchy at step 2 will reduce drop-off. Spec written from the prototype, not from scratch. Eng picks it up with context already baked in.'},
-        exercise:'Take the feedback and iterations from lesson 3.2. Ask Claude to synthesize everything across all rounds into a single learning document. Identify where you have confidence and where you do not. Write a hypothesis statement for what you will ship. Decide: what does success look like in the data after you ship it?',
+        exercise:'Take what you learned testing the Nudge summary prototype. Ask Claude to synthesize it into a learning synthesis and a hypothesis statement: We believe that [this feature] will [produce this outcome] for Nudge users in their first 30 days, as measured by 30-day retention rate.',
         prompts:['Here are my notes and observations from [N] rounds of prototype testing:\n\n[paste all session notes and iteration decisions]\n\nPlease: (1) synthesize the top 3 things we learned with confidence, (2) identify what we still do not know, (3) draft a hypothesis statement in the format: we believe [change] will result in [outcome] because [evidence], (4) list what this prototype tells eng and design that a spec written from scratch would not.'],
         artifact:'A learning synthesis document and a hypothesis statement ready to hand to the triad',
         quiz:{q:'How do you know when to stop iterating and ship?',opts:['When you run out of time','When the team agrees the prototype looks good','When additional rounds are producing the same observations and you have a clear hypothesis you can measure','When eng says they are ready'],correct:2,explain:'You stop when you are learning less with each round and you have a specific, testable prediction about what will happen when you ship. That is the signal that iteration has done its job.'}
@@ -505,7 +522,7 @@ const curriculum = [
           {name:'Guardrails',desc:'What vibe coding is not — when to slow down, when to stop, and when production code needs to be written properly'}
         ],
         example:{before:'Sprint planning. PM describes a feature verbally. Design needs a week to mock it up. Eng estimates based on the verbal description. Three weeks later the first working version looks nothing like what anyone imagined. Two more weeks of revision.','after':'PM brings a working prototype to sprint planning. Design reacts to interaction patterns, not a description of them. Eng sees the intended behavior before writing a line of code. Estimate is grounded in something real. First production version is much closer to the intent. Revision cycle shrinks.'},
-        exercise:'Take the prototype and hypothesis from lessons 3.1-3.3. Bring it into a working session with your designer and tech lead. Have design identify what they would change and what they can build from. Have eng identify what the prototype tells them about scope and feasibility. Update the prototype based on their input. Document what each triad member now knows that they did not know before the session.',
+        exercise:'Take the Nudge prototype and hypothesis to a 30-minute session with Raj and Lena. Use Claude to prep the agenda: what you want to show, what questions you need answered, and what decisions you need to walk out with.',
         prompts:['I have a working prototype that has been through [N] rounds of user testing. I am about to share it with my designer and tech lead. Please help me prepare:\n(1) A brief framing for the designer — what the prototype is trying to solve, what we learned from users, and what I want their reaction on\n(2) A brief framing for the tech lead — what the prototype is showing, what the open technical questions are, and what I need from them before we write a spec\n(3) A list of decisions this session should produce so we leave with alignment, not more questions'],
         artifact:'A triad session plan and a post-session alignment doc — decisions made, open questions resolved, next steps owned',
         quiz:{q:'What is the PM role in vibe coding with the triad?',opts:['To build the entire product alone using Claude','To write all the code and hand it to eng to clean up','To produce a working artifact that collapses the abstraction gap — giving design and eng something real to react to instead of a description','To replace the need for design and engineering'],correct:2,explain:'Vibe coding is not about PMs replacing their triad. It is about using Claude to produce a working artifact fast enough that design and eng can react to something real — which is faster, more aligned, and more accurate than building from a verbal description or a static spec.'}
@@ -526,7 +543,7 @@ const curriculum = [
           {name:'Data Models',desc:'What the database schema tells you about product decisions made long ago'}
         ],
         example:{before:'Engineer: the issue is in the OAuth token refresh handler in the auth middleware.\nYou: got it. (You have no idea what that means or where to look.)',after:'You: I looked at /src/auth/middleware.js — it looks like the token refresh only runs on page load, not on API calls. Is that what is causing the session drops?\nEngineer: Exactly. You got it.'},
-        exercise:'Clone a public open-source project. Ask Claude to give you a PM-level tour: what it does, how it is organized, where the key user-facing features live.',
+        exercise:'Use https://github.com/maybe-finance/maybe as your codebase — similar structure to Nudge. Ask Claude for a PM-level tour: what does each major folder do, what are the key data models, what would you need to know to write a good ticket for a notification ranking feature? Then write the ticket.',
         prompts:['I have cloned this repo. Give me a PM-level tour: (1) what this product does in one sentence, (2) how the codebase is organized — key folders and what they contain, (3) where the main user-facing features are implemented, (4) what the database models tell us about the data model. Explain as if I have never read code before.'],
         artifact:'A plain-English codebase summary you can reference in sprint planning',
         quiz:{q:'Why is it useful for a PM to navigate a codebase?',opts:['To replace engineers','To write code faster','To ask better questions and catch scope issues earlier','It is not useful for PMs'],correct:2,explain:'You do not need to write code. You need to read it like a map. PMs who can do this have more precise conversations and catch expensive misalignments before they ship.'}
@@ -541,7 +558,7 @@ const curriculum = [
           {name:'Async Communication',desc:'How to communicate with eng in a way that respects deep work'}
         ],
         example:{before:'You finish research, know what to build, write the spec. Three days after handing it to engineering there are 14 Slack messages. The spec described what to build but not the context the user operates in. That context changes how the flow needs to work.',after:'Spec sent then user context mapped explicitly in design review then edge cases documented before eng picks it up then 2 clarifying questions from eng (expected) then ships then measurable improvement in segment conversion.\nThe difference: the spec was grounded in actual user context before engineering touched it.'},
-        exercise:'Pick a feature currently in development. Use Claude to draft a spec readiness checklist, an async update request to your tech lead, and a list of decisions you own vs. decisions you should defer to eng.',
+        exercise:'Take the Nudge weekly summary spec. Use Claude to run a spec readiness check — ask it to play a skeptical Raj and identify the top 3 questions the spec does not answer. Fix them. Then write an async Slack message proposing a scope constraint before sprint kickoff.',
         prompts:['I am working with my tech lead on [feature]. Please help me: (1) create a spec readiness checklist — what should be resolved before eng picks up a ticket, (2) draft an async status update request that respects their focus time, (3) list the decisions I own as PM vs. the ones I should defer to eng judgment.'],
         artifact:'A spec readiness checklist and an async eng communication template',
         quiz:{q:'What does a tech lead most need from their PM?',opts:['Daily status check-ins','Clear decisions made upfront so they can build without constant interruption','More detailed specs','Faster approvals'],correct:1,explain:'Engineers do their best work with clear direction and uninterrupted time. The PM job is to front-load the decisions so eng can move fast once they start.'}
@@ -556,7 +573,7 @@ const curriculum = [
           {name:'Approval vs. Sign-off',desc:'When PM approves direction vs. when design owns the final call'}
         ],
         example:{before:'You are standardizing UX across three products that have drifted apart over years. Design shows you three sets of comps. You have opinions based on instinct, not the user testing you just finished.',after:'Feedback structured before the design review:\nWhat research supports: this segment needs to see status information earlier in the flow — the comp addresses that well\nSpecific concern: The error state uses red text only. 15% of users are colorblind and this is a high-stakes surface. Can we add an icon?\nSigning off on: The overall flow sequence and the reconnect pattern\nNot signing off yet: Error states across all three surfaces until we align on an accessibility standard\nThe designer had something concrete to act on. Review took 25 minutes instead of 90.'},
-        exercise:'Take a recent design comp you need to review. Use Claude to structure your feedback into: what user research supports, specific elements to reconsider, questions for the designer, and what you are signing off on.',
+        exercise:'Lena has shared her first pass on the Nudge weekly summary screen. Use Claude to write structured design feedback: separate what users need from how to solve it, cite at least 2 pieces of evidence from the Priya/Tom/Amara interviews, and keep it to one page.',
         prompts:['I need to review this design comp for [feature]. Help me structure my feedback: (1) what user needs does this address well, (2) what specific elements raise questions — framed in user terms not aesthetics, (3) questions to bring to the designer, (4) what I am prepared to sign off on as PM.'],
         artifact:'A structured design review document you can share with your designer',
         quiz:{q:'What makes design feedback useful vs. unhelpful?',opts:['Useful feedback is longer','Useful feedback is specific, tied to a user need or constraint — not personal aesthetic preference','Useful feedback praises more than it critiques','Useful feedback comes from the PM alone'],correct:1,explain:'"This feels busy" is a feeling. "The primary action is competing with 4 other elements at the same visual weight" is a specific problem a designer can solve.'}
@@ -571,7 +588,7 @@ const curriculum = [
           {name:'Participating in Code Review',desc:'What to look for in a pull request — scope, user impact, and what changed beyond the spec'}
         ],
         example:{before:'PM clicks through the happy path. Looks good. Ships. Three hours later a support ticket: what happens if I upload a file with a comma in the filename? Nobody thought of that.',after:'Claude generates 23 edge cases from the spec. PM tests 10 of them. Finds 2 bugs. They are fixed before launch. Support ticket never arrives.'},
-        exercise:'Take a feature currently in QA or recently shipped. Use Claude to generate a comprehensive edge case list from the spec. Test the top 5 you are most worried about. Then find a recent pull request and ask Claude to explain what it changes — leave one meaningful comment.',
+        exercise:'The Nudge weekly summary is heading into QA. Use Claude to generate an edge case list for the notification ranking logic. Write 5 QA test cases and one PR comment from a PM perspective.',
         prompts:['Here is the spec for [feature]: [paste]. Please generate: (1) a comprehensive edge case list grouped by category (empty states, error states, permissions, data limits, concurrent users), (2) the 5 most likely to cause a user-facing bug, (3) a PM QA checklist I can run before sign-off.\n\nAlso here is a recent PR diff: [paste]. Please explain what this changes in plain English and suggest 2-3 questions I should ask before it ships.'],
         artifact:'An edge case list, a PM QA checklist, and your first meaningful PR comment',
         quiz:{q:'What is the PM role in QA?',opts:['To replace QA engineers','To test the happy path only','To think about edge cases, user-facing errors, and scenarios the spec did not anticipate','To approve the final design'],correct:2,explain:'Eng QA tests functionality. PM QA tests reality — the weird inputs, the empty states, the users who do things in the wrong order. Both are needed.'}
@@ -591,7 +608,7 @@ const curriculum = [
           {name:'Iterative Analysis',desc:'Drilling from broad to specific across multiple questions'},
           {name:'Data Quality',desc:'Knowing when to trust a number and when to question it'}
         ],
-        exercise:'Drop in a CSV or describe your data schema. Ask 3 real product questions you have been wanting answers to. Get answers, then drill into the most interesting one with 2 follow-up questions.',
+        exercise:'Use the Nudge metrics snapshot from the scenario doc. Ask Claude: why did 30-day retention drop from 44% to 37%? Build a metric tree, write the SQL to decompose the drop by acquisition channel and first-week behavior, and interpret what the data suggests.',
         prompts:['Here is my dataset / schema: [describe or paste]. I have 3 product questions: (1) [question], (2) [question], (3) [question]. For each: write the SQL, show the result, interpret it in plain English, flag any data quality concerns.','§AGENT§I want to turn my most important recurring data question into a scheduled agent. The question: [describe]. Data source: [warehouse/schema]. Please: (1) write the SQL, (2) set up a daily schedule, (3) compare to previous day and flag changes, (4) deliver plain-English interpretation to Slack every morning.'],
         artifact:'A data findings document with answers to 3 real product questions',
         quiz:{q:'What is the most common mistake when interpreting data without a data analyst?',opts:['The charts look bad','Confusing correlation with causation — seeing a pattern and assuming it explains behavior','The queries are slow','You cannot share results'],correct:1,explain:'Two things moving together does not mean one caused the other. Good analysis generates alternative explanations and tests them before drawing conclusions.'}
@@ -653,7 +670,7 @@ const curriculum = [
           {name:'Style Calibration',desc:'Teaching Claude your writing preferences once, not every session'},
           {name:'Reuse',desc:'One skill that works for any feature — not a template you copy-paste'}
         ],
-        exercise:'Build a PRD skill. Use it to generate a PRD for a real feature. Note 3 things to improve. Update the skill. Run it again. The second one should be noticeably better.',
+        exercise:'Write the PRD for the Nudge weekly summary feature using everything from P2 and P3: interview synthesis, feedback analysis, competitive gaps, prototype learnings. Ask Claude to assemble them into a PRD with Problem Statement, User, Goals, Non-Goals, Success Metrics, and User Stories. Audience: Raj and Lena. One page.',
         prompts:['Help me build a PRD SKILL.md. My PRDs should: [describe style and required sections]. Include: a template with placeholders, instructions for handling ambiguous inputs, examples of tone. Generate the full SKILL.md file.'],
         artifact:'A PRD skill and a sample PRD it generated',
         quiz:{q:'Why build a skill rather than save a prompt?',opts:['Skills are longer','A skill compounds — it improves each time and works for any future PRD without rewriting','Prompts expire','Skills are more secure'],correct:1,explain:'A saved prompt is static. A skill is a system. Every PRD you write teaches you what the skill should do differently — and you update it accordingly.'}
@@ -703,8 +720,8 @@ const curriculum = [
     ]
   },
   {
-    id:'p7',num:'P7',title:'Make It Stick',
-    subtitle:'Turn what you have learned into a daily practice and bring your team along',
+    id:'p7',num:'P7',title:'Systems',
+    subtitle:'Build the workspace, skills, and agents that make your practice stick',
     lessons:[
       {id:'p7l1',num:'7.1',time:'30 min',difficulty:'easy',
         title:'Setting Up a Workspace That Works for You',
@@ -721,31 +738,31 @@ const curriculum = [
         quiz:{q:'Why does folder structure matter in Claude Code?',opts:['It does not — Claude finds everything automatically','Clear structure lets Claude navigate your work and lets you find anything in seconds','It is required by Anthropic','It saves disk space'],correct:1,explain:'Claude reads your file system. Tell it to check the research folder and it will — if the folder exists and is named clearly. Structure is context.'}
       },
       {id:'p7l2',num:'7.2',time:'40 min',difficulty:'medium',
-        title:'Turning Repetitive Work into One-Command Workflows',
-        subtitle:'The tasks you do every week should take one prompt, not twenty minutes.',
+        title:'Building Skills Worth Keeping',
+        subtitle:'The tasks you do every week should take one paste, not twenty minutes.',
         concepts:[
-          {name:'Workflow Design',desc:'Breaking a recurring task into steps Claude can execute reliably'},
-          {name:'Skill Chaining',desc:'Multiple skills running in sequence — output of one feeds the next'},
-          {name:'Trigger Prompts',desc:'The single sentence that kicks off a whole workflow'},
-          {name:'Time Audit',desc:'Measure how much time each workflow actually saves'}
+          {name:'A Skill Worth Keeping',desc:'Designed to run the same way every time — clear input, clear output, clear save path. If you would rebuild it from scratch next week, it is not a skill yet'},
+          {name:'The One-Paste Rule',desc:'A real skill works from a single paste. CLAUDE.md carries the rest. If you need to explain context every time, tighten the skill'},
+          {name:'Skills Get Smarter',desc:'Every run against real data makes the output sharper. The workspace grows — more context, more relevant output each time'},
+          {name:'Three Skills Every PM Needs',desc:'Status update, competitive pulse, meeting prep. These cover 80% of your weekly repetitive work'}
         ],
         exercise:'Identify your top 3 most repetitive PM tasks. Build a workflow for each — a trigger prompt, the steps Claude runs, the expected output. Time all 3 and compare to your current process.',
         prompts:['I want to build a repeatable workflow for [task]. My current process: [describe steps]. Please: (1) design a Claude Code workflow for each step, (2) write the trigger prompt, (3) identify which skills this workflow calls, (4) describe what the output should look like.'],
-        artifact:'3 working PM workflows, each triggered by a single prompt',
+        artifact:'3 reusable skills — each triggered by a single paste, each saved to skills/',
         quiz:{q:'What makes a workflow worth building?',opts:['It is fully automated','It handles variable inputs and produces consistent, useful outputs every time','It runs on a schedule','It requires no human input at all'],correct:1,explain:'A good workflow handles the variability — different meetings, different features, different stakeholders — and still produces something useful every time. Consistency is the goal, not automation.'}
       },
       {id:'p7l3',num:'7.3',time:'45 min',difficulty:'advanced',
         title:'Building Agents That Work While You Sleep',
-        subtitle:'Convert your highest-frequency, lowest-judgment workflows into agents that run on a schedule — and learn where to keep the human in the loop.',
+        subtitle:'Turn your most repetitive tasks into agents that run on a schedule — and learn where to keep the human in the loop.',
         concepts:[
-          {name:'Agent vs. Workflow',desc:'A workflow runs when you trigger it. An agent runs on a schedule and surfaces results to you — the difference is who initiates'},
-          {name:'High-Frequency Low-Judgment Tasks',desc:'The tasks that happen weekly or daily and follow a predictable pattern — prime candidates for agents'},
-          {name:'Human in the Loop',desc:'Where the agent stops and the PM decides — the boundary you must set intentionally'},
-          {name:'Guardrails',desc:'What agents should never do autonomously — write to production, send external comms, or make decisions with real consequences'}
+          {name:'Trigger + Destination',desc:'An agent is a skill with two additions: when does it fire, and where does the output go? That is the whole difference — nothing else changes'},
+          {name:'The Three-Part Agent',desc:'What watches it (trigger), what it does (action), where it lands (destination). Name all three before you build anything'},
+          {name:'Try It by Hand First',desc:'Before you schedule anything, run the agent yourself and verify the output. Never put something on a schedule you have not run at least once'},
+          {name:'When You Are Ready for Real',desc:'In Claude Code you simulate the agent manually. In the real world: a cron job, n8n, or a Python script. The spec you write today is your commissioning brief'}
         ],
         exercise:'Identify the 3 tasks from this course that you do most frequently. For each, decide: is this high-frequency and low-judgment enough to automate? Build an agent for the best candidate — one that runs on a schedule, produces a draft or digest, and surfaces it to you for review before anything is acted on.',
         prompts:['I want to build an agent for [task]. It should run [frequency — daily/weekly]. Here is what it needs to do: [describe the steps]. Here is where I want it to stop and wait for my review before proceeding: [describe the checkpoint]. Here are the things it should never do without explicit approval: [list]. Please: (1) design the agent workflow, (2) write the trigger and schedule configuration, (3) write the output format I will review, (4) build in an explicit human checkpoint before any action is taken.'],
-        artifact:'A working scheduled agent for your highest-frequency PM task — with documented guardrails',
+        artifact:'A working agent spec — verified by hand, ready to commission for real',
         quiz:{q:'What is the most important design decision when building a PM agent?',opts:['How fast it runs','Where the human checkpoint is — what the agent drafts vs. what the PM must approve before anything happens','How many tasks it handles','Whether it uses GPT-4 or Claude'],correct:1,explain:'An agent without a human checkpoint is a liability. The power is in the automation. The safety is in knowing exactly where you stay in the loop — and never automating a decision with real consequences.'}
       },
       {id:'p7l4',num:'7.4',time:'50 min',difficulty:'advanced',
@@ -787,14 +804,14 @@ const curriculum = [
         title:'The Metric Pulse Agent',
         subtitle:'A daily agent that queries your data, compares to baseline, flags anomalies, and delivers a morning digest to Slack — silence means nothing to investigate.',
         concepts:[
-          {name:'Scheduled Queries',desc:'SQL that runs on a timer rather than when you manually trigger it'},
-          {name:'Baseline Comparison',desc:'Comparing current values to 7-day and 30-day averages to define what normal looks like'},
-          {name:'Anomaly Threshold',desc:'The boundary you set — when a metric crosses it the agent alerts rather than staying silent'},
+          {name:'The Pulse Architecture',desc:'Four decisions before you build: where does the data come from, what threshold is signal vs noise, what does the output look like, where does it land'},
+          {name:'Baseline and Drift',desc:'Your baseline is your reference point. Drift is the direction of movement over time. Set alert thresholds based on what a real move looks like for your metric'},
+          {name:'Run It by Hand First',desc:'Build the spec and run it manually first. Verify the output. In this course Claude Code simulates the run. In the real world: Python + cron, n8n, or a developer ticket'},
           {name:'Signal vs. Noise',desc:'How to tune the threshold so the agent surfaces what matters without alerting on every fluctuation'}
         ],
-        exercise:'Pick 3 metrics you check manually right now. Define the baseline and anomaly threshold for each. Build a metric pulse agent that queries all three daily, compares to baseline, and delivers a digest to Slack. Tune it until the first week of digests contains only signal worth acting on.',
-        prompts:['Once you have built this agent, wrap it in a Claude Code Routine to make it run automatically on Anthropic\'s cloud — no terminal required. Configure a prompt, repo, and connectors once, then set a nightly schedule. Pro plan: 5 runs per day. Max: 15. Team and Enterprise: 25. Run /routines in Claude Code to get started.','§AGENT§I want to build a daily metric pulse agent. My 3 metrics are: (1) [metric, baseline, threshold], (2) [metric, baseline, threshold], (3) [metric, baseline, threshold]. Data source: [warehouse/schema]. Please: (1) write the SQL for each metric, (2) write the baseline comparison logic, (3) design the schedule and trigger, (4) write the Slack message format — one line per metric, normal or flagged, (5) define what the agent does when it cannot reach the data source.','§AGENT§When a metric crosses the threshold I want the agent to automatically run a metric tree decomposition and generate 2 ranked hypotheses. Add that logic so the alert arrives with analysis attached, not just a number.'],
-        artifact:'A running daily metric pulse agent delivering a Slack digest every morning — then wrap it in a Claude Code Routine to run it nightly on Anthropic\'s cloud without keeping your terminal open',
+        exercise:'Build a metric pulse agent for your product. Define your metric, baseline, and alert threshold. Break it down by acquisition channel. Deliver a Monday morning digest to Slack. Run it manually first to verify the output. Then save the spec as your commissioning brief for when you are ready to wire it for real.',
+        prompts:['§AGENT§I want to build a daily metric pulse agent. My 3 metrics are: (1) [metric, baseline, threshold], (2) [metric, baseline, threshold], (3) [metric, baseline, threshold]. Data source: [warehouse/schema]. Please: (1) write the SQL for each metric, (2) write the baseline comparison logic, (3) design the schedule and trigger, (4) write the Slack message format — one line per metric, normal or flagged, (5) define what the agent does when it cannot reach the data source.','§AGENT§When a metric crosses the threshold I want the agent to automatically run a metric tree decomposition and generate 2 ranked hypotheses. Add that logic so the alert arrives with analysis attached, not just a number.'],
+        artifact:'A metric pulse agent spec — verified by hand, delivering a Slack digest, ready to commission via cron, n8n, or your engineering team',
         quiz:{q:'What does it mean when your metric pulse agent stays silent for a week?',opts:['The agent is broken','The thresholds are too loose','Nothing moved outside normal range — silence is the signal that things are stable','You need more metrics'],correct:2,explain:'A well-tuned agent that stays silent is doing its job. If you get alerts every day your thresholds are too tight. If you never get alerts, verify the agent is actually running.'}
       },
       {id:'p8l2',num:'8.2',time:'55 min',difficulty:'advanced',
@@ -829,10 +846,10 @@ const curriculum = [
         title:'Connecting Your Agent Stack',
         subtitle:'Wire your agents together into a coherent system — shared context, consistent outputs, and a clear picture of what is running and what to do when something breaks.',
         concepts:[
-          {name:'Agent Registry',desc:'A single file documenting every agent you have running — what it watches, when it runs, where it delivers, how it fails'},
-          {name:'Shared Context',desc:'All agents reading from the same project.md and strategy.md so outputs stay grounded in your current priorities'},
-          {name:'Output Consistency',desc:'Every agent writing to a predictable location and format so you can build on their outputs'},
-          {name:'Failure Handling',desc:'Silent failure is the worst outcome — every agent must either produce output or tell you it could not'}
+          {name:'The Registry',desc:'One document — every agent listed with name, trigger, data sources, output format, schedule, owner. The single source of truth for your stack'},
+          {name:'Shared Context',desc:'All agents inherit from the same CLAUDE.md — same definitions, same product context. Shared context keeps outputs consistent'},
+          {name:'The Stack View',desc:'Pulse agent is the sensor layer, anomaly agent is the diagnosis layer, weekly report is the synthesis layer. Three layers of intelligence on top of your data'},
+          {name:'The Real World Handoff',desc:'The specs you built are commissioning briefs. Hand them to a developer, n8n, or a Python cron job. You configure systems that work on your behalf. You direct. You do not do.'}
         ],
         exercise:'Build an agent registry documenting every agent from this course. For each: what it monitors, when it runs, where it delivers, what it does when it fails. Wire two agents to share context — the weekly insight report should read from the anomaly log so it can reference this week anomalies in the narrative. Run your full stack in sequence and review the outputs for consistency.',
         prompts:['§AGENT§Build an agent registry for my full stack. My agents: [list each with purpose and schedule]. Please generate: (1) a registry markdown file — purpose, schedule, data sources, output location, failure behavior for each agent, (2) a shared context file all agents read before running — current product priorities from strategy.md, (3) a weekly health check prompt I can run to verify all agents are producing output and nothing has silently broken.','§AGENT§I want my weekly insight report to incorporate the anomaly log from my pulse agent. The report should reference anomalies from the past 7 days and their status — investigated, resolved, or still open. Design the handoff between agents and update the synthesis prompt to weave the anomaly context into the narrative.'],
@@ -1001,7 +1018,7 @@ function showReleaseNotes(){
         <div class="gs-step">
           <div class="gs-num" style="background:#1A56DB;color:#fff">🔄</div>
           <div><div class="gs-title">Course updated for the Product School cohort launch</div>
-          <div class="gs-body">Updated Getting Started with an OpenClaw warning (install directly from Anthropic), auto mode explainer for Team plan users, Windows PowerShell note (Git Bash no longer required), and Cowork updated to GA status with Dispatch added to the comparison.</div>
+          <div class="gs-body">Updated Getting Started with an OpenClaw warning (install directly from Anthropic), auto mode explainer for Team plan users, Windows PowerShell note (Git Bash no longer required), and Cowork updated to GA status with Dispatch added to the comparison. Two versions of the course are now published: the public version (no scenario) and the cohort version (Nudge scenario included in every exercise).</div>
         </div></div>
         <div class="gs-step">
           <div class="gs-num">P1</div>
@@ -1015,8 +1032,8 @@ function showReleaseNotes(){
         </div></div>
         <div class="gs-step">
           <div class="gs-num">P8</div>
-          <div><div class="gs-title">P8L1 — Claude Code Routines added as graduate path</div>
-          <div class="gs-body">P8L1 (metric pulse agent) now includes Claude Code Routines as the next step after building an agent — configure once, run on a schedule on Anthropic\'s cloud without keeping your terminal open. Pro: 5 runs/day, Max: 15, Team/Enterprise: 25.</div>
+          <div><div class="gs-title">P7 + P8 updated — Routines removed, two-path commissioning added</div>
+          <div class="gs-body">Dropped Claude Code Routines as a concept. Added skill → agent → system ladder with plain-language analogies. Each agent lesson now shows how to simulate in Claude Code and how to commission for real via Python + cron, n8n, or an engineering ticket.</div>
         </div></div>
       </div>
 
@@ -1073,7 +1090,7 @@ function showHome(){
         <div class="stat"><div class="stat-num">8</div><div class="stat-label">Parts</div></div>
         <div class="stat"><div class="stat-num">${total}</div><div class="stat-label">Lessons</div></div>
         <div class="stat"><div class="stat-num">${total}</div><div class="stat-label">Artifacts</div></div>
-        <div class="stat"><div class="stat-num">~8h</div><div class="stat-label">Total time</div></div>
+        <div class="stat"><div class="stat-num">~12h</div><div class="stat-label">Total time</div></div>
       </div>
       <div class="section-heading">Course curriculum</div>
       <div class="parts-grid">
@@ -1098,32 +1115,139 @@ function showGettingStarted(){
       <h1>Getting started</h1>
       <p class="lesson-subtitle" style="margin-left:16px">Everything you need before opening lesson 1.</p>
 
-      <div class="section"><div class="section-label">What you need</div>
-        <div class="gs-step">
-          <div class="gs-num">1</div>
-          <div><div class="gs-title">An Anthropic account</div>
-          <div class="gs-body">Go to <a href="https://claude.ai" target="_blank">claude.ai</a> and create a free account. Claude Code requires a <strong>Pro plan ($20/month)</strong> or higher — the free tier does not include it. If your company has an Anthropic API contract, ask your IT or AI team about access.</div></div>
+      <div class="section"><div class="section-label">Important — Install directly from Anthropic</div>
+        <div class="gs-step" style="border-left:3px solid #DC2626;border-radius:0 10px 10px 0;margin-bottom:12px">
+          <div style="font-size:18px;padding-top:2px">🚨</div>
+          <div><div class="gs-title" style="color:#DC2626">Do not use third-party harnesses</div>
+          <div class="gs-body">As of April 2026, Anthropic no longer allows Claude subscriptions to power third-party wrappers like OpenClaw. If you installed Claude Code through a third-party tool, you will be billed separately and may lose access mid-session. Install Claude Code directly from Anthropic using the steps below — not from any third-party source.</div>
+        </div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Install Claude Code</div>
+        <div style="display:flex;gap:8px;margin:0 0 20px 0;">
+          <button id="tab-mac" onclick="switchOsTab('mac')" style="padding:7px 20px;border-radius:6px;border:1px solid var(--blue);background:var(--blue);color:#fff;font-size:13px;font-weight:700;cursor:pointer;">🍎 Mac</button>
+          <button id="tab-win" onclick="switchOsTab('win')" style="padding:7px 20px;border-radius:6px;border:1px solid var(--border);background:var(--white);color:var(--text-mid);font-size:13px;font-weight:600;cursor:pointer;">🪟 Windows</button>
         </div>
-        <div class="gs-step">
-          <div class="gs-num">2</div>
-          <div><div class="gs-title">Install Claude Code</div>
-          <div class="gs-body">Claude Code runs in your terminal. Install it with:<br><br>
-          <code>npm install -g @anthropic-ai/claude-code</code><br><br>
-          You need Node.js 18 or higher. If you do not have Node.js, download it from <a href="https://nodejs.org" target="_blank">nodejs.org</a> first. Once installed, open your terminal and run <code>claude</code> to start a session.</div></div>
+
+        <div id="os-mac">
+          <div class="gs-step" style="border-left:3px solid var(--blue);border-radius:0 10px 10px 0;margin-bottom:12px">
+            <div style="font-size:18px;padding-top:2px">⚠️</div>
+            <div><div class="gs-title">Do this before installing Claude Code</div>
+            <div class="gs-body">If your Mac has never been used for development you will hit dependency errors — old Python, npm permission failures, missing tools. Follow these steps in order and you will avoid all of them.</div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">1</div>
+            <div><div class="gs-title">Install Homebrew</div>
+            <div class="gs-body">Homebrew is a package manager for Mac. Installing everything through Homebrew avoids the permission errors you get from official installers.<br><br>
+            <code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code><br><br>
+            After it finishes, it will print a few lines starting with "Next steps." Run those commands — they add Homebrew to your shell path. This step is easy to miss and will break everything if you skip it.</div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">2</div>
+            <div><div class="gs-title">Install Node.js through Homebrew</div>
+            <div class="gs-body">Do not use the official Node.js installer from nodejs.org — it causes npm permission errors on Mac. Use Homebrew instead:<br><br>
+            <code>brew install node</code><br><br>
+            Verify: <code>node --version</code> and <code>npm --version</code> — both should return a version number.</div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">3</div>
+            <div><div class="gs-title">Install Python 3 through Homebrew</div>
+            <div class="gs-body">macOS ships with an old version of Python that Claude Code does not support. Install the current version:<br><br>
+            <code>brew install python3</code><br><br>
+            Verify: <code>python3 --version</code> — should show Python 3.10 or higher.</div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">4</div>
+            <div><div class="gs-title">Install Claude Code</div>
+            <div class="gs-body">With Node installed via Homebrew, this will work without permission errors:<br><br>
+            <code>npm install -g @anthropic-ai/claude-code</code><br><br>
+            If you see an <code>EACCES</code> permission error, it means Node was not installed through Homebrew. Go back to step 2.</div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">5</div>
+            <div><div class="gs-title">Create your first project folder</div>
+            <div class="gs-body">Create a folder for this course:<br><br>
+            <code>mkdir my-pm-workspace && cd my-pm-workspace</code><br><br>
+            Run <code>claude</code> inside it. This is where your CLAUDE.md, project files, and skills will live. One folder per project.</div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">6</div>
+            <div><div class="gs-title">Run your first prompt</div>
+            <div class="gs-body">Verify it is working:<br><br>
+            <code>What can you do in this session? What files can you see?</code><br><br>
+            Claude will list its capabilities and any files in the folder. If it responds, you are ready for lesson 1.</div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">7</div>
+            <div><div class="gs-title">About auto mode</div>
+            <div class="gs-body">Claude Code has auto mode — it handles permission prompts automatically. If you are on the Team plan you may see it during setup.<br><br>
+            <strong>Turn it on:</strong> isolated environments, long sessions where you do not want to approve every file operation.<br><br>
+            <strong>Leave it off:</strong> anything touching production data, shared systems, or external APIs.<br><br>
+            Toggle with: <code>claude config set autoMode true</code> or <code>false</code></div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">8</div>
+            <div><div class="gs-title">If you still hit errors</div>
+            <div class="gs-body">Paste the exact error message into Claude and ask it to help you fix it. Include your Mac OS version (<code>sw_vers</code>) and what you ran. Claude is excellent at diagnosing setup issues.</div>
+          </div></div>
         </div>
-        <div class="gs-step">
-          <div class="gs-num">3</div>
-          <div><div class="gs-title">Create your first project folder</div>
-          <div class="gs-body">Create a folder for your first project:<br><br>
-          <code>mkdir my-pm-workspace && cd my-pm-workspace</code><br><br>
-          Then run <code>claude</code> inside it. This folder is where your CLAUDE.md, project files, and skills will live. One folder per project is the right mental model.</div></div>
+
+        <div id="os-win" style="display:none">
+          <div class="gs-step" style="border-left:3px solid var(--blue);border-radius:0 10px 10px 0;margin-bottom:12px">
+            <div style="font-size:18px;padding-top:2px">💡</div>
+            <div><div class="gs-title">Windows setup is simpler than it used to be</div>
+            <div class="gs-body">Git for Windows and Git Bash are no longer required. Claude Code now uses PowerShell automatically. You just need Node.js and the Claude Code package — that is it.</div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">1</div>
+            <div><div class="gs-title">Install Node.js</div>
+            <div class="gs-body">Download and install Node.js from <a href="https://nodejs.org" target="_blank">nodejs.org</a> — use the LTS version. Run the installer with default settings.<br><br>
+            Verify in PowerShell: <code>node --version</code> and <code>npm --version</code> — both should return a version number. If they don't, close and reopen PowerShell.</div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">2</div>
+            <div><div class="gs-title">Install Claude Code</div>
+            <div class="gs-body">Open PowerShell and run:<br><br>
+            <code>npm install -g @anthropic-ai/claude-code</code><br><br>
+            If you see a permissions error, run PowerShell as Administrator: right-click the Start menu → "Windows PowerShell (Admin)" and try again.</div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">3</div>
+            <div><div class="gs-title">Create your first project folder</div>
+            <div class="gs-body">In PowerShell:<br><br>
+            <code>mkdir my-pm-workspace; cd my-pm-workspace</code><br><br>
+            Run <code>claude</code> inside it. This is where your CLAUDE.md, project files, and skills will live.</div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">4</div>
+            <div><div class="gs-title">Run your first prompt</div>
+            <div class="gs-body">Verify it is working:<br><br>
+            <code>What can you do in this session? What files can you see?</code><br><br>
+            Claude will list its capabilities and any files in the folder. If it responds, you are ready for lesson 1.</div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">5</div>
+            <div><div class="gs-title">About auto mode</div>
+            <div class="gs-body">Claude Code has auto mode — it handles permission prompts automatically. If you are on the Team plan you may see it during setup.<br><br>
+            <strong>Turn it on:</strong> isolated environments, long sessions where you do not want to approve every file operation.<br><br>
+            <strong>Leave it off:</strong> anything touching production data, shared systems, or external APIs.<br><br>
+            Toggle with: <code>claude config set autoMode true</code> or <code>false</code></div>
+          </div></div>
+          <div class="gs-step">
+            <div class="gs-num">6</div>
+            <div><div class="gs-title">If you hit errors</div>
+            <div class="gs-body">Paste the exact error message into Claude and ask it to help you fix it. Include your Windows version and what you ran.</div>
+          </div></div>
         </div>
+      </div>
+
+      <div class="section"><div class="section-label">Your Anthropic account</div>
         <div class="gs-step">
-          <div class="gs-num">4</div>
-          <div><div class="gs-title">Run your first prompt</div>
-          <div class="gs-body">Type anything to verify it is working. A good first prompt:<br><br>
-          <code>What can you do in this session? What files can you see?</code><br><br>
-          Claude will describe its capabilities and list any files it can read in your current directory. If it responds, you are ready for lesson 1.</div></div>
+          <div class="gs-num">💳</div>
+          <div><div class="gs-title">Claude Pro — $20/month</div>
+          <div class="gs-body">Go to <a href="https://claude.ai" target="_blank">claude.ai</a> and create an account. Claude Code requires a <strong>Pro plan ($20/month)</strong> or higher — the free tier does not include it. If your company has an Anthropic API contract, ask your IT or AI team about access.<br><br>
+          <strong>Claude for Teams — $30/user/month</strong> — if your company wants to roll this out to multiple PMs, this is the right plan. It adds admin controls and usage visibility. Most PMs doing typical PM work will not hit usage limits in a normal workday.</div></div>
         </div>
       </div>
 
@@ -1146,76 +1270,11 @@ function showGettingStarted(){
         <div class="gs-step">
           <div style="font-size:18px;padding-top:2px">🎯</div>
           <div><div class="gs-title">Recommendation</div>
-          <div class="gs-body">If you are a Cowork user, start with P1 through P6 and get real value immediately. Come back to P7 and P8 when you are ready to set up Claude Code — the Mac setup guide below will walk you through it in under 20 minutes.</div>
+          <div class="gs-body">If you are a Cowork user, start with P1 through P6 and get real value immediately. Come back to P7 and P8 when you are ready to set up Claude Code — the setup guide above will walk you through it in under 20 minutes.</div>
         </div></div>
       </div>
 
-      <div class="section"><div class="section-label">Important — Install directly from Anthropic</div>
-        <div class="gs-step" style="border-left:3px solid #DC2626;border-radius:0 10px 10px 0;margin-bottom:12px">
-          <div style="font-size:18px;padding-top:2px">🚨</div>
-          <div><div class="gs-title" style="color:#DC2626">Do not use third-party harnesses</div>
-          <div class="gs-body">As of April 2026, Anthropic no longer allows Claude subscriptions to power third-party wrappers like OpenClaw. If you installed Claude Code through a third-party tool, you will be billed separately and may lose access mid-session. Install Claude Code directly from Anthropic using the steps below — not from any third-party source.</div>
-        </div></div>
-      </div>
 
-      <div class="section"><div class="section-label">Setting up your Mac</div>
-        <div class="gs-step" style="border-left:3px solid var(--blue);border-radius:0 10px 10px 0;margin-bottom:12px">
-          <div style="font-size:18px;padding-top:2px">⚠️</div>
-          <div><div class="gs-title">Do this before installing Claude Code</div>
-          <div class="gs-body">If your Mac has never been used for development you will hit dependency errors — old Python, npm permission failures, missing tools. Follow these steps in order and you will avoid all of them.</div>
-          <div class="gs-body" style="margin-top:8px"><strong>Windows users:</strong> Git for Windows and Git Bash are no longer required. Claude Code now falls back to PowerShell automatically. Skip any instructions telling you to install Git Bash first — install Node.js and then Claude Code directly.</div>
-        </div></div>
-        <div class="gs-step">
-          <div class="gs-num">1</div>
-          <div><div class="gs-title">Install Homebrew first</div>
-          <div class="gs-body">Homebrew is a package manager for Mac. Installing everything through Homebrew avoids the permission errors you get from official installers.<br><br>
-          <code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code><br><br>
-          After it finishes, it will print a few lines starting with "Next steps." Run those commands — they add Homebrew to your shell path. This step is easy to miss and will break everything if you skip it.</div>
-        </div></div>
-        <div class="gs-step">
-          <div class="gs-num">2</div>
-          <div><div class="gs-title">Install Node.js through Homebrew</div>
-          <div class="gs-body">Do not use the official Node.js installer from nodejs.org — it causes npm permission errors. Use Homebrew instead:<br><br>
-          <code>brew install node</code><br><br>
-          Verify it worked: <code>node --version</code> and <code>npm --version</code>. Both should return a version number.</div>
-        </div></div>
-        <div class="gs-step">
-          <div class="gs-num">3</div>
-          <div><div class="gs-title">Install Python 3 through Homebrew</div>
-          <div class="gs-body">macOS ships with an old version of Python that Claude Code does not support. Install the current version:<br><br>
-          <code>brew install python3</code><br><br>
-          Verify: <code>python3 --version</code> — should show Python 3.10 or higher.</div>
-        </div></div>
-        <div class="gs-step">
-          <div class="gs-num">4</div>
-          <div><div class="gs-title">Now install Claude Code</div>
-          <div class="gs-body">With Node installed via Homebrew, this will work without permission errors:<br><br>
-          <code>npm install -g @anthropic-ai/claude-code</code><br><br>
-          If you see an <code>EACCES</code> permission error, it means Node was not installed through Homebrew. Go back to step 2.</div>
-        </div></div>
-        <div class="gs-step">
-          <div class="gs-num">5</div>
-          <div><div class="gs-title">About auto mode</div>
-          <div class="gs-body">Claude Code has a feature called auto mode that handles permission prompts automatically using a safety classifier. If you are on the Team plan you may see it during setup.<br><br>
-          <strong>When to turn it on:</strong> isolated project environments, long sessions where you do not want to approve every file operation.<br><br>
-          <strong>When to leave it off:</strong> anything touching production data, shared systems, or external APIs you do not control.<br><br>
-          Enable or disable it with: <code>claude config set autoMode true</code> or <code>false</code></div>
-        </div></div>
-        <div class="gs-step">
-          <div class="gs-num">6</div>
-          <div><div class="gs-title">If you still hit errors</div>
-          <div class="gs-body">Paste the exact error message into Claude and ask it to help you fix it. Include your Mac OS version (<code>sw_vers</code>) and what you ran. Claude is good at diagnosing setup issues — use it.</div>
-        </div></div>
-      </div>
-
-      <div class="section"><div class="section-label">What Claude Code costs</div>
-        <div class="gs-step" style="border-left:3px solid var(--blue);border-radius:0 10px 10px 0">
-          <div style="font-size:20px;padding-top:2px">💳</div>
-          <div><div class="gs-title">Claude Pro — $20/month</div>
-          <div class="gs-body">Covers personal use of Claude Code. Good for running this course and building your own workflows. Usage is metered — heavy sessions (long research tasks, large file analysis) consume more tokens. Most PMs doing typical PM work will not hit limits in a normal workday.<br><br>
-          <strong>Claude for Teams — $30/user/month</strong> — if your company wants to roll this out to multiple PMs, this is the right plan. It adds admin controls and usage visibility.</div></div>
-        </div>
-      </div>
 
       <div class="section"><div class="section-label">What not to paste into Claude Code</div>
         <div class="warning-box">
